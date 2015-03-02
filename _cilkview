@@ -1,0 +1,6 @@
+#!/bin/sh
+
+cilkview ./main input1 temp1
+
+
+
