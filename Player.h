@@ -4,17 +4,18 @@
 #include "Card.h"
 
 typedef enum moves {
-        FOLD,
-        CHECK,
-        BET,
+    FOLD,
+    CHECK,
+    BET,
 } Move;
 
 class Player
 {
 public:
+    Player();
     Player(int chips);
     ~Player();
-    void newHand(Card **newCards);
+    void addCardToHand(Card *newCard, int i);
     int getChipCount();
     void setDealer(bool deal);
 
@@ -22,6 +23,6 @@ private:
     Card *hand[2];
     int chips;
     bool isDealer;
-}
+};
 
 #endif //PLAYER_H

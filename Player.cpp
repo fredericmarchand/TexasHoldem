@@ -1,33 +1,40 @@
 #include "Player.h"
+#include "Card.h"
+#include <cstdlib>
+
+Player::Player()
+{
+    hand[0] = NULL;
+    hand[1] = NULL;
+    isDealer = false;
+    this->chips = 1000;
+}
 
 Player::Player(int chips)
 {
-        hand[0] = NULL;
-        hand[1] = NULL;
-        isDealer = false;
-        this.chips = chips;
+    hand[0] = NULL;
+    hand[1] = NULL;
+    isDealer = false;
+    this->chips = chips;
 }
 
 Player::~Player()
 {
-        hand[0] = NULL;
-        hand[1] = NULL;
+    hand[0] = NULL;
+    hand[1] = NULL;
 }
 
-void Player::newHand(Card *card)
+void Player::addCardToHand(Card *card, int i)
 {
-        if (hand[0] == NULL)
-            hand[0] = card;
-        else
-            hand[1] = card;
+    hand[i] = card;
 }
 
 int Player::getChipCount()
 {
-        return chips;
+    return chips;
 }
 
-int Player::setDealer(bool deal)
+void Player::setDealer(bool deal)
 {
-        isDealer = deal;
+    isDealer = deal;
 }

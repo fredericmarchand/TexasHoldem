@@ -9,13 +9,13 @@ class Dealer
 public:
     Dealer();
     ~Dealer();
-    void distributeCards(Player *players, int numPlayers);
+    void distributeCards(Player **players, int numPlayers);
     void shuffleDeck(); 
     Card* flipNextCard();
-    void* discardNextCard();
+    void discardNextCard();
 private:
     int deckPointer;
     Card *deck[52];
-}
+};
 
 #endif //DEALER_H

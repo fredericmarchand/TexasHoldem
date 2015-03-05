@@ -5,13 +5,13 @@ Dealer::Dealer()
     deckPointer = 0;
 
     int index = 0;
-    Suit suit = HEARTS;
+    int suit = HEARTS;
     for (; suit <= DIAMONDS; ++suit)
     {
-        CardValue value = TWO;
+        int value = TWO;
         for (; value <= ACE; ++value)
         {
-            Card *card = new Card(suit, value);
+            Card *card = new Card((Suit)suit, (CardValue)value);
             deck[index++] = card;
         }
     }
@@ -31,7 +31,7 @@ void Dealer::distributeCards(Player **players, int numPlayers)
     {
         for (int i = 0; i < numPlayers; ++i)
         {
-            players[i]->newHand(deck[deckPointer++]);
+            players[i]->addCardToHand(deck[deckPointer++], j);
         }
     }
 }
