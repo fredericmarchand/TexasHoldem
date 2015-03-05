@@ -1,5 +1,4 @@
 #include "Player.h"
-#include "Card.h"
 #include <cstdlib>
 
 Player::Player()

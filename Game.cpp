@@ -1,4 +1,5 @@
 #include "Game.h"
+#include <cstdlib>
 
 Game::Game(int numPlayers)
 {
