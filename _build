@@ -1,5 +1,0 @@
-#!/bin/sh
-
-g++ main.cpp -o main -lcilkrts -ldl -std=c++11 -fcilkplus
-
-

@@ -109,27 +109,27 @@ static int evaluateHand(Card *hand[])
 
     if (straight && flush)
     {
-        return 9;
+        return STRAIGHT_FLUSH;
     }
     else if (four)
     {
-        return 8;
+        return FOUR_OF_A_KIND;
     }
     else if (full)
     {
-        return 7;
+        return FULL_HOUSE;
     }
     else if (flush)
     {
-        return 6;
+        return FLUSH;
     }
     else if (straight)
     {
-        return 5;
+        return STRAIGHT;
     }
     else if (three)
     {
-        return 4;
+        return THREE_OF_A_KIND;
     }
 
     //checks for pairs
@@ -143,15 +143,15 @@ static int evaluateHand(Card *hand[])
 
     if (pairs == 2)
     {
-        return 3;
+        return TWO_PAIR;
     }
     else if (pairs)
     {
-        return 2;
+        return PAIR;
     }
     else
     {
-        return 1;
+        return HIGH_CARD;
     }
 }
 
