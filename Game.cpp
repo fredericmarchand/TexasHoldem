@@ -1,5 +1,6 @@
 #include "Game.h"
 #include <cstdlib>
+#include "Search.h"
 
 Game::Game(int numPlayers)
 {
