@@ -6,6 +6,7 @@ Game::Game(int numPlayers)
 {
     this->numPlayers = numPlayers;
     players = new Player*[numPlayers];
+    dealer = new Dealer;
     for (int i = 0; i < numPlayers; ++i)
     {
         players[i] = new Player(1000);
@@ -19,6 +20,20 @@ Game::~Game()
         delete players[i];
     }
     delete [] players;
+}
+
+Player** Game::getPlayers()
+{
+    return players;
+}
+
+Dealer* Game::getDealer() {
+    return dealer;
+}
+
+int Game::getPlayerCount()
+{
+    return numPlayers;
 }
 
 static int compareCards(const void *card1, const void *card2)

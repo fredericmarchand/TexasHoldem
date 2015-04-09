@@ -15,11 +15,23 @@
 #include <string.h>
 using namespace std;
 
+#include "Game.h"
+#include "Player.h"
+
 #define DEBUG 0 
 
 int main(int argc, char** argv) 
 {
-	cout << "Hello, World!" << endl;
+	cout << "Starting new game" << endl;
+
+	Game *game = new Game(2);
+	Player *me = game->getPlayers()[0];
+	Dealer *dealer = game->getDealer();
+	dealer->shuffleDeck();
+	dealer->distributeCards(game->getPlayers(), game->getPlayerCount());
+	me->printHand();
+
+
     return 0;
 }
 

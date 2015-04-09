@@ -1,6 +1,9 @@
 #ifndef CARD_H
 #define CARD_H
 
+#include <string>
+using namespace std;
+
 typedef enum suits {
     HEARTS      = 0,
     SPADES      = 1,
@@ -31,6 +34,8 @@ public:
     ~Card();
     Suit getSuit();
     CardValue getCardValue();
+    string getSuitSymbol();
+    string getValueSymbol();
 
 private:
     Suit suit;

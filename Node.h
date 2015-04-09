@@ -14,7 +14,7 @@ private:
 	bool visited;
 	float winRate;
 	Node *parent;
-	int visits
+	int visits;
 
 };
 

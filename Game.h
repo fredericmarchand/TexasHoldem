@@ -32,7 +32,7 @@ public:
 
 private:
     Player **players;
-    Dealer dealer;
+    Dealer *dealer;
     int numPlayers;
     int pot;
     Card *flop[3];

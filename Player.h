@@ -18,6 +18,7 @@ public:
     void addCardToHand(Card *newCard, int i);
     int getChipCount();
     void setDealer(bool deal);
+    void printHand();
 
 private:
     Card *hand[2];
