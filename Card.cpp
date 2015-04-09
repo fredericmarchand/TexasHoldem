@@ -1,5 +1,8 @@
 #include "Card.h"
 
+#include <iostream>
+using namespace std;
+
 Card::Card(Suit suit, CardValue value)
 {
     this->suit = suit;
@@ -66,4 +69,15 @@ string Card::getValueSymbol()
     case ACE:
     	return " A";
 	}
+}
+
+void Card::printCard()
+{
+    cout << "|----------|" << endl;
+    cout << "|          |" << endl;
+    cout << "|          |" << endl;
+    cout << "|   " << getValueSymbol() << getSuitSymbol() << "    |" << endl;
+    cout << "|          |" << endl;
+    cout << "|          |" << endl;
+    cout << "|----------|" << endl;
 }

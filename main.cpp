@@ -12,7 +12,7 @@
 #include <vector>
 #include <algorithm>
 #include <cmath>
-#include <string.h>
+#include <string>
 using namespace std;
 
 #include "Game.h"
@@ -30,7 +30,81 @@ int main(int argc, char** argv)
 	dealer->shuffleDeck();
 	dealer->distributeCards(game->getPlayers(), game->getPlayerCount());
 	me->printHand();
+	string move = "";
 
+	cout << "Check (c), Bet (b), Fold (f)" << endl;
+	cin >> move;
+	if (move.compare("c") == 0)
+	{
+
+	}
+	if (move.compare("b") == 0)
+	{
+
+	}
+	if (move.compare("f") == 0)
+	{
+
+	}
+
+	//Flop
+	game->flipFlop();
+
+	//Move
+	cout << "Check (c), Bet (b), Fold (f)" << endl;
+	cin >> move;
+	if (move.compare("c") == 0)
+	{
+
+	}
+	if (move.compare("b") == 0)
+	{
+
+	}
+	if (move.compare("f") == 0)
+	{
+
+	}
+
+	//Turn
+	game->flipTurn();
+
+	//Move
+	cout << "Check (c), Bet (b), Fold (f)" << endl;
+	cin >> move;
+	if (move.compare("c") == 0)
+	{
+
+	}
+	if (move.compare("b") == 0)
+	{
+
+	}
+	if (move.compare("f") == 0)
+	{
+
+	}
+
+	//River
+	game->flipRiver();
+
+	//Move
+	cout << "Check (c), Bet (b), Fold (f)" << endl;
+	cin >> move;
+	if (move.compare("c") == 0)
+	{
+
+	}
+	if (move.compare("b") == 0)
+	{
+
+	}
+	if (move.compare("f") == 0)
+	{
+
+	}
+
+	//Check Results
 
     return 0;
 }

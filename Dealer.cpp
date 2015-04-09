@@ -64,12 +64,12 @@ void Dealer::shuffleDeck()
 
 Card* Dealer::flipNextCard()
 {
-        Card *card = deck[deckPointer];
-        deckPointer++;
-        return card; 
+    Card *card = deck[deckPointer];
+    deckPointer++;
+    return card; 
 }
 
 void Dealer::discardNextCard()
 {
-        deckPointer++;
+    deckPointer++;
 }

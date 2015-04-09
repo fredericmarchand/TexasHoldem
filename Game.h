@@ -27,6 +27,9 @@ public:
     Dealer* getDealer();
     int getPlayerCount();
     void rotateDealerChip();
+    void flipFlop();
+    void flipTurn();
+    void flipRiver();
     static int evaluateHand(Card *hand[]);
     static int compareCards(const void *card1, const void *card2);
 

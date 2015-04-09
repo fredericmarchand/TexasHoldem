@@ -36,6 +36,7 @@ public:
     CardValue getCardValue();
     string getSuitSymbol();
     string getValueSymbol();
+    void printCard();
 
 private:
     Suit suit;

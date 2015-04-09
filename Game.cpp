@@ -36,6 +36,31 @@ int Game::getPlayerCount()
     return numPlayers;
 }
 
+void Game::flipFlop()
+{
+    dealer->discardNextCard();
+    flop[0] = dealer->flipNextCard();
+    flop[1] = dealer->flipNextCard();
+    flop[2] = dealer->flipNextCard();
+    flop[0]->printCard();
+    flop[1]->printCard();
+    flop[2]->printCard();
+}
+
+void Game::flipTurn()
+{
+    dealer->discardNextCard();
+    turn = dealer->flipNextCard();
+    turn->printCard();
+}
+
+void Game::flipRiver()
+{
+    dealer->discardNextCard();
+    river = dealer->flipNextCard();
+    river->printCard();
+}
+
 static int compareCards(const void *card1, const void *card2)
 {
     return (*(Card *)card1).getCardValue() - (*(Card *)card2).getCardValue();
