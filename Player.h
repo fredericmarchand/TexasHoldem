@@ -26,7 +26,6 @@ public:
     void printHand();
     bool bet(int *pot, int value);
     Hand bestHand(Card** flop, Card *turn, Card *river);
-    //void performMove(Game *game);
 
 private:
     Card *hand[2];

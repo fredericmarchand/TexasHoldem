@@ -57,13 +57,7 @@ void Player::printHand()
         cout << "Something is null" << endl;
         return;
     }
-    cout << "|----------|----------|" << endl;
-    cout << "|          |          |" << endl;
-    cout << "|          |          |" << endl;
-    cout << "|   " << hand[0]->getValueSymbol() << hand[0]->getSuitSymbol() << "    |   " << hand[1]->getValueSymbol() << hand[1]->getSuitSymbol() << "    |" << endl;
-    cout << "|          |          |" << endl;
-    cout << "|          |          |" << endl;
-    cout << "|----------|----------|" << endl;
+    printCardArray(hand, 2);
 }
 
 bool Player::bet(int *pot, int value)
@@ -151,12 +145,6 @@ Hand Player::bestHand(Card** flop, Card *turn, Card *river)
     {
         cout << "retCombo is NULL" << endl;
     }
-
-    //for (int i = 0; i < 5; ++i)
-    //{
-    //    retCombo[i]->printCard();
-    //    cout << endl;
-    //}
 
     printCardArray(retCombo, 5);
 

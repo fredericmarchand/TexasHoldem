@@ -47,7 +47,7 @@ Game::~Game()
 void Game::resetDeck()
 {
     deckPointer = 0;
-}  
+}
 
 Player** Game::getPlayers()
 {
@@ -162,9 +162,7 @@ void Game::flipFlop()
     flop[0] = flipNextCard();
     flop[1] = flipNextCard();
     flop[2] = flipNextCard();
-    flop[0]->printCard();
-    flop[1]->printCard();
-    flop[2]->printCard();
+    printCardArray(flop, 3);
 }
 
 void Game::flipTurn()
@@ -207,7 +205,7 @@ void Game::shuffleDeck()
  
     // Start from the last element and swap one by one. We don't
     // need to run for the first element that's why i > 0
-    for (int i = 52; i > 0; i--)
+    for (int i = 51; i >= 0; i--)
     {
         // Pick a random index from 0 to i
         int j = rand() % (i+1);
