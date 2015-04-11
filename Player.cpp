@@ -9,14 +9,18 @@ Player::Player()
     hand[1] = NULL;
     dealer = false;
     this->chips = 1000;
+    state = CHECK;
+    ai = true;
 }
 
-Player::Player(int chips)
+Player::Player(int chips, bool ai)
 {
     hand[0] = NULL;
     hand[1] = NULL;
     dealer = false;
     this->chips = chips;
+    state = CHECK;
+    this->ai = ai;
 }
 
 Player::~Player()
@@ -45,6 +49,11 @@ bool Player::isDealer()
     return dealer;
 }
 
+bool Player::isAI()
+{
+    return ai;
+}
+
 void Player::setDealer(bool deal)
 {
     dealer = deal;
@@ -58,6 +67,16 @@ void Player::printHand()
         return;
     }
     printCardArray(hand, 2);
+}
+
+Move Player::getState()
+{
+    return state;
+}
+
+void Player::setState(Move move)
+{
+    state = move;
 }
 
 bool Player::bet(int *pot, int value)

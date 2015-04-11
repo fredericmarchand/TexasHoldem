@@ -12,7 +12,7 @@ Game::Game(int numPlayers)
     players = new Player*[numPlayers];
     for (int i = 0; i < numPlayers; ++i)
     {
-        players[i] = new Player(1000);
+        players[i] = new Player(1000, true);
     }
 
     deckPointer = 0;

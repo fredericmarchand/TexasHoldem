@@ -17,11 +17,26 @@ using namespace std;
 #include "Game.h"
 #include "Player.h"
 
-#define DEBUG 0 
+#define DEBUG 0
+#define PLAYERS_TURN (turn == me && !AI_game)
 
 Move aiMove(Game *game) 
 {
     return CHECK;
+}
+
+void printLabel(string label)
+{
+    for (int i = 0; i < label.length(); ++i)
+    {
+        cout << "=";
+    }
+    cout << endl << label << endl;
+    for (int i = 0; i < label.length(); ++i)
+    {
+        cout << "=";
+    }
+    cout << endl;
 }
 
 Move doMove(Game *game) 
@@ -52,9 +67,13 @@ Move doMove(Game *game)
 
 int main(int argc, char** argv) 
 {
+    bool AI_game = false;
     Game *game = new Game(2);
     Player *me = game->getPlayers()[0];
     me->setDealer(true);
+
+    if (argc > 1)
+        AI_game = true;
 
     while (1)
     {
@@ -66,9 +85,7 @@ int main(int argc, char** argv)
         game->resetDeck();
         game->rotateDealerChip();
 
-        cout << "=================" << endl;
-        cout << "Starting new game" << endl;
-        cout << "=================" << endl;
+        printLabel("Starting new game");
         game->shuffleDeck();
 
         //blinds
@@ -82,13 +99,12 @@ int main(int argc, char** argv)
         Player *turn = game->getNextPlayer(game->getBigBlindPlayer());
         while (turn != game->getBigBlindPlayer())
         {
-            //if (turn == me)
-            //{
-                //Do actual move
-            //}
-            //else
-            //{
-                //Perform AI move
+            if (PLAYERS_TURN)
+            {
+                doMove(game);
+            }
+            else //AI
+            {
                 if (turn == game->getSmallBlindPlayer())
                 {
                     turn->bet(game->getPot(), SMALL_BLIND);
@@ -97,126 +113,59 @@ int main(int argc, char** argv)
                 {
                     turn->bet(game->getPot(), BIG_BLIND);
                 }
-            //}
+            }
 
             turn = game->getNextPlayer(turn);
         }
         //Perform big blind players move
+        if (PLAYERS_TURN)
+        {
             //Check for now
+            doMove(game);
+        }
+        else //AI
+        {
+            //Check
+        }
+            
+        cout << "Pot: $" << *(game->getPot()) << endl;
+        cin.ignore();
+        
+        //Flop
+        printLabel("Flop");
+        game->flipFlop();
+
+        //Round of betting
+
         cout << "Pot: $" << *(game->getPot()) << endl;
         cin.ignore();
 
-        //Check for now
-        //Move move;
-
-        /*move = doMove(game);
-        if (move == FOLD) 
-        {
-            continue;
-        }
-        else if (move == CHECK)
-        {
-
-        }
-        else if (move == BET)
-        {
-
-        }
-        else
-        {
-            
-        }*/
-
-        //Flop
-        cout << "====" << endl;
-        cout << "Flop" << endl;
-        cout << "====" << endl;
-        game->flipFlop();
-        cin.ignore();
-
-        //Moves
-        /*move = doMove(game);
-        if (move == FOLD) 
-        {
-            continue;
-        }
-        else if (move == CHECK)
-        {
-
-        }
-        else if (move == BET)
-        {
-
-        }
-        else
-        {
-
-        }*/
-
         //Turn
-        cout << "====" << endl;
-        cout << "Turn" << endl;
-        cout << "====" << endl;
+        printLabel("Turn");
         game->flipTurn();
+
+        //Round of betting
+
+        cout << "Pot: $" << *(game->getPot()) << endl;
         cin.ignore();
-
-        //Check for now
-        //Moves
-        /*move = doMove(game);
-        if (move == FOLD) 
-        {
-            continue;
-        }
-        else if (move == CHECK)
-        {
-
-        }
-        else if (move == BET)
-        {
-
-        }
-        else
-        {
-            
-        }*/
 
         //River
-        cout << "=====" << endl;
-        cout << "River" << endl;
-        cout << "=====" << endl;
+        printLabel("River");
         game->flipRiver();
+        cout << "Pot: $" << *(game->getPot()) << endl;
         cin.ignore();
 
-        //Check for now
-        //Moves
-        /*move = doMove(game);
-        if (move == FOLD) 
-        {
-            continue;
-        }
-        else if (move == CHECK)
-        {
+        //Final round of betting
 
-        }
-        else if (move == BET)
-        {
+        cout << "Pot: $" << *(game->getPot()) << endl;
 
-        }
-        else
-        {
-            
-        }*/
-
-        //Check Results
-        //Give Pot to winner
+        //Check Results and give pot to winner
         cout << endl;
         game->determineWinner();
         cin.ignore();
-
     }
 
     cout << "The winner is: " << (game->getPlayers()[0]->getChipCount() == 0 ? "Player 2" : "Player 1") << endl;
-
 
     return 0;
 }
