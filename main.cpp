@@ -49,13 +49,27 @@ int main(int argc, char** argv)
 {
     Game *game = new Game(2);
     Player *me = game->getPlayers()[0];
+    me->setDealer(true);
 
     while (1)
     {
+        if (game->getPlayers()[0]->getChipCount() == 0 || game->getPlayers()[1]->getChipCount() == 0)
+        {
+            break;
+        }
+
+        game->rotateDealerChip();
+
         cout << "=================" << endl;
         cout << "Starting new game" << endl;
         cout << "=================" << endl;
         game->shuffleDeck();
+
+        //blinds
+        game->getSmallBlindPlayer()->bet(game->getPot(), SMALL_BLIND);
+        game->getBigBlindPlayer()->bet(game->getPot(), BIG_BLIND);
+        cout << "Pot: $" << *(game->getPot()) << endl;
+
         game->distributeCards();
         me->printHand();
 
@@ -65,6 +79,18 @@ int main(int argc, char** argv)
         if (move == FOLD) 
         {
             continue;
+        }
+        else if (move == CHECK)
+        {
+
+        }
+        else if (move == BET)
+        {
+
+        }
+        else
+        {
+            
         }
 
         //Flop
@@ -79,6 +105,18 @@ int main(int argc, char** argv)
         {
             continue;
         }
+        else if (move == CHECK)
+        {
+
+        }
+        else if (move == BET)
+        {
+
+        }
+        else
+        {
+
+        }
 
         //Turn
         cout << "====" << endl;
@@ -91,6 +129,18 @@ int main(int argc, char** argv)
         if (move == FOLD) 
         {
             continue;
+        }
+        else if (move == CHECK)
+        {
+
+        }
+        else if (move == BET)
+        {
+
+        }
+        else
+        {
+            
         }
 
         //River
@@ -105,9 +155,25 @@ int main(int argc, char** argv)
         {
             continue;
         }
+        else if (move == CHECK)
+        {
+
+        }
+        else if (move == BET)
+        {
+
+        }
+        else
+        {
+            
+        }
 
         //Check Results
+
     }
+
+    cout << "The winner is: " << (game->getPlayers()[0]->getChipCount() == 0 ? "Player 2" : "Player 1") << endl;
+
 
     return 0;
 }

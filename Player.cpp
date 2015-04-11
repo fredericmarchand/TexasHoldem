@@ -6,7 +6,7 @@ Player::Player()
 {
     hand[0] = NULL;
     hand[1] = NULL;
-    isDealer = false;
+    dealer = false;
     this->chips = 1000;
 }
 
@@ -14,7 +14,7 @@ Player::Player(int chips)
 {
     hand[0] = NULL;
     hand[1] = NULL;
-    isDealer = false;
+    dealer = false;
     this->chips = chips;
 }
 
@@ -34,9 +34,14 @@ int Player::getChipCount()
     return chips;
 }
 
+bool Player::isDealer()
+{
+    return dealer;
+}
+
 void Player::setDealer(bool deal)
 {
-    isDealer = deal;
+    dealer = deal;
 }
 
 void Player::printHand()
@@ -53,4 +58,16 @@ void Player::printHand()
     cout << "|          |          |" << endl;
     cout << "|          |          |" << endl;
     cout << "|----------|----------|" << endl;
+}
+
+bool Player::bet(int *pot, int value)
+{
+    bool allIn = false;
+
+    if ((chips - value) <= 0)
+        allIn =  true;
+
+    (*pot)+=value;
+    chips-=value;
+    return allIn;
 }

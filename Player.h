@@ -7,6 +7,7 @@ typedef enum moves {
     FOLD,
     CHECK,
     BET,
+    CALL,
 } Move;
 
 class Player
@@ -17,13 +18,15 @@ public:
     ~Player();
     void addCardToHand(Card *newCard, int i);
     int getChipCount();
+    bool isDealer();
     void setDealer(bool deal);
     void printHand();
+    bool bet(int *pot, int value);
 
 private:
     Card *hand[2];
     int chips;
-    bool isDealer;
+    bool dealer;
 };
 
 #endif //PLAYER_H

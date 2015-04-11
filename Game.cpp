@@ -50,6 +50,76 @@ int Game::getPlayerCount()
     return numPlayers;
 }
 
+int* Game::getPot()
+{
+    return &pot;
+}
+
+void Game::rotateDealerChip()
+{
+    int dealer;
+    for (int i = 0; i < numPlayers; ++i)
+    {
+        if (players[i]->isDealer())
+        {
+           dealer = i;
+           break;
+        }
+    }
+    players[dealer]->setDealer(false);
+    if (dealer == 0)
+    {
+        players[numPlayers-1]->setDealer(true);
+    }
+    else
+    {
+        players[dealer-1]->setDealer(true);
+    }
+}
+
+Player* Game::getDealer()
+{
+    for (int i = 0; i < numPlayers; ++i)
+    {
+        if (players[i]->isDealer())
+        {
+           return players[i];
+        }
+    }
+}
+
+Player* Game::getBigBlindPlayer()
+{
+    int dealer;
+    for (int i = 0; i < numPlayers; ++i)
+    {
+        if (players[i]->isDealer())
+        {
+           dealer = i;
+           break;
+        }
+    }
+    if ((dealer - 1) == 0) {
+        return players[numPlayers-2];
+    }
+}
+
+Player* Game::getSmallBlindPlayer()
+{
+    int dealer;
+    for (int i = 0; i < numPlayers; ++i)
+    {
+        if (players[i]->isDealer())
+        {
+           dealer = i;
+           break;
+        }
+    }
+    if ((dealer - 1) == 0) {
+        return players[numPlayers-1];
+    }
+}
+
 void Game::flipFlop()
 {
     discardNextCard();

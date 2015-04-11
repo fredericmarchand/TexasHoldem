@@ -4,6 +4,10 @@
 #include "Player.h"
 #include "Card.h"
 
+#define SMALL_BLIND     50
+#define BIG_BLIND       100
+#define DEFAULT_BET     BIG_BLIND
+
 typedef enum hands {
     HIGH_CARD,
     PAIR,
@@ -24,7 +28,11 @@ public:
     ~Game();
     Player** getPlayers();
     int getPlayerCount();
+    int* getPot();
     void rotateDealerChip();
+    Player* getDealer();
+    Player* getBigBlindPlayer();
+    Player* getSmallBlindPlayer();
     void flipFlop();
     void flipTurn();
     void flipRiver();
