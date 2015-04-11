@@ -6,10 +6,23 @@ Game::Game(int numPlayers)
 {
     this->numPlayers = numPlayers;
     players = new Player*[numPlayers];
-    dealer = new Dealer;
     for (int i = 0; i < numPlayers; ++i)
     {
         players[i] = new Player(1000);
+    }
+
+    deckPointer = 0;
+
+    int index = 0;
+    int suit = HEARTS;
+    for (; suit <= DIAMONDS; ++suit)
+    {
+        int value = TWO;
+        for (; value <= ACE; ++value)
+        {
+            Card *card = new Card((Suit)suit, (CardValue)value);
+            deck[index++] = card;
+        }
     }
 }
 
@@ -20,15 +33,16 @@ Game::~Game()
         delete players[i];
     }
     delete [] players;
+
+    for (int i = 0; i < 52; ++i)
+    {
+        delete deck[i];
+    }
 }
 
 Player** Game::getPlayers()
 {
     return players;
-}
-
-Dealer* Game::getDealer() {
-    return dealer;
 }
 
 int Game::getPlayerCount()
@@ -38,10 +52,10 @@ int Game::getPlayerCount()
 
 void Game::flipFlop()
 {
-    dealer->discardNextCard();
-    flop[0] = dealer->flipNextCard();
-    flop[1] = dealer->flipNextCard();
-    flop[2] = dealer->flipNextCard();
+    discardNextCard();
+    flop[0] = flipNextCard();
+    flop[1] = flipNextCard();
+    flop[2] = flipNextCard();
     flop[0]->printCard();
     flop[1]->printCard();
     flop[2]->printCard();
@@ -49,16 +63,64 @@ void Game::flipFlop()
 
 void Game::flipTurn()
 {
-    dealer->discardNextCard();
-    turn = dealer->flipNextCard();
+    discardNextCard();
+    turn = flipNextCard();
     turn->printCard();
 }
 
 void Game::flipRiver()
 {
-    dealer->discardNextCard();
-    river = dealer->flipNextCard();
+    discardNextCard();
+    river = flipNextCard();
     river->printCard();
+}
+
+void Game::distributeCards() 
+{
+    for (int j = 0; j < 2; ++j)
+    {
+        for (int i = 0; i < numPlayers; ++i)
+        {
+            players[i]->addCardToHand(deck[deckPointer++], j);
+        }
+    }
+}
+
+void swap(Card **a, Card **b)
+{
+    Card *temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+void Game::shuffleDeck()
+{
+    // Use a different seed value so that we don't get same
+    // result each time we run this program
+    srand ( time(NULL) );
+ 
+    // Start from the last element and swap one by one. We don't
+    // need to run for the first element that's why i > 0
+    for (int i = 52; i > 0; i--)
+    {
+        // Pick a random index from 0 to i
+        int j = rand() % (i+1);
+ 
+        // Swap arr[i] with the element at random index
+        swap(&deck[i], &deck[j]);
+    }
+}
+
+Card* Game::flipNextCard()
+{
+    Card *card = deck[deckPointer];
+    deckPointer++;
+    return card; 
+}
+
+void Game::discardNextCard()
+{
+    deckPointer++;
 }
 
 static int compareCards(const void *card1, const void *card2)
@@ -195,4 +257,3 @@ static int evaluateHand(Card *hand[])
         return HIGH_CARD;
     }
 }
-

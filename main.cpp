@@ -2,7 +2,6 @@
  * TexasHoldemAI.cilk
  * 
  * Frederic Marchand
- * 100817579
  */
 
 #include <cilk/cilk.h>
@@ -20,93 +19,95 @@ using namespace std;
 
 #define DEBUG 0 
 
+Move doMove(Game *game) 
+{
+	Move move;
+	string moveStr = "";
+
+	while (moveStr.compare("c") != 0 && moveStr.compare("b") != 0 && moveStr.compare("f") != 0)
+	{
+		cout << "Check (c), Bet (b), Fold (f)" << endl;
+		cin >> moveStr;
+	}
+	if (moveStr.compare("c") == 0)
+	{
+		move = CHECK;
+	}
+	if (moveStr.compare("b") == 0)
+	{
+		move = BET;
+	}
+	if (moveStr.compare("f") == 0)
+	{
+		move = FOLD;
+	}
+
+	return move;
+}
+
 int main(int argc, char** argv) 
 {
-	cout << "Starting new game" << endl;
-
 	Game *game = new Game(2);
 	Player *me = game->getPlayers()[0];
-	Dealer *dealer = game->getDealer();
-	dealer->shuffleDeck();
-	dealer->distributeCards(game->getPlayers(), game->getPlayerCount());
-	me->printHand();
-	string move = "";
 
-	cout << "Check (c), Bet (b), Fold (f)" << endl;
-	cin >> move;
-	if (move.compare("c") == 0)
+	while (1)
 	{
+		cout << "=================" << endl;
+		cout << "Starting new game" << endl;
+		cout << "=================" << endl;
+		game->shuffleDeck();
+		game->distributeCards();
+		me->printHand();
 
+		Move move;
+
+		move = doMove(game);
+		if (move == FOLD) 
+		{
+			continue;
+		}
+
+		//Flop
+		cout << "====" << endl;
+		cout << "Flop" << endl;
+		cout << "====" << endl;
+		game->flipFlop();
+
+		//Move
+		move = doMove(game);
+		if (move == FOLD) 
+		{
+			continue;
+		}
+
+		//Turn
+		cout << "====" << endl;
+		cout << "Turn" << endl;
+		cout << "====" << endl;
+		game->flipTurn();
+
+		//Move
+		move = doMove(game);
+		if (move == FOLD) 
+		{
+			continue;
+		}
+
+		//River
+		cout << "=====" << endl;
+		cout << "River" << endl;
+		cout << "=====" << endl;
+		game->flipRiver();
+
+		//Move
+		move = doMove(game);
+		if (move == FOLD) 
+		{
+			continue;
+		}
+
+		//Check Results
 	}
-	if (move.compare("b") == 0)
-	{
-
-	}
-	if (move.compare("f") == 0)
-	{
-
-	}
-
-	//Flop
-	game->flipFlop();
-
-	//Move
-	cout << "Check (c), Bet (b), Fold (f)" << endl;
-	cin >> move;
-	if (move.compare("c") == 0)
-	{
-
-	}
-	if (move.compare("b") == 0)
-	{
-
-	}
-	if (move.compare("f") == 0)
-	{
-
-	}
-
-	//Turn
-	game->flipTurn();
-
-	//Move
-	cout << "Check (c), Bet (b), Fold (f)" << endl;
-	cin >> move;
-	if (move.compare("c") == 0)
-	{
-
-	}
-	if (move.compare("b") == 0)
-	{
-
-	}
-	if (move.compare("f") == 0)
-	{
-
-	}
-
-	//River
-	game->flipRiver();
-
-	//Move
-	cout << "Check (c), Bet (b), Fold (f)" << endl;
-	cin >> move;
-	if (move.compare("c") == 0)
-	{
-
-	}
-	if (move.compare("b") == 0)
-	{
-
-	}
-	if (move.compare("f") == 0)
-	{
-
-	}
-
-	//Check Results
 
     return 0;
 }
-
-

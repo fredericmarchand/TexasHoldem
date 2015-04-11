@@ -2,7 +2,6 @@
 #define GAME_H
 
 #include "Player.h"
-#include "Dealer.h"
 #include "Card.h"
 
 typedef enum hands {
@@ -24,23 +23,27 @@ public:
     Game(int numPlayers);
     ~Game();
     Player** getPlayers();
-    Dealer* getDealer();
     int getPlayerCount();
     void rotateDealerChip();
     void flipFlop();
     void flipTurn();
     void flipRiver();
+    void distributeCards();
+    void shuffleDeck(); 
+    Card* flipNextCard();
+    void discardNextCard();
     static int evaluateHand(Card *hand[]);
     static int compareCards(const void *card1, const void *card2);
 
 private:
     Player **players;
-    Dealer *dealer;
     int numPlayers;
     int pot;
     Card *flop[3];
     Card *turn;
     Card *river;
+    int deckPointer;
+    Card *deck[52];
 };
 
 #endif //GAME_H
