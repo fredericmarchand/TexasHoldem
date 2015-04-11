@@ -1,5 +1,5 @@
 #include "Card.h"
-
+#include <cstdlib>
 #include <iostream>
 using namespace std;
 
@@ -34,7 +34,7 @@ string Card::getSuitSymbol()
     case CLUBS:
         return "♣";
     case DIAMONDS:
-        return "♣";
+        return "♦";
     }
 }
 

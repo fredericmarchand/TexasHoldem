@@ -19,6 +19,11 @@ using namespace std;
 
 #define DEBUG 0 
 
+Move aiMove(Game *game) 
+{
+    return CHECK;
+}
+
 Move doMove(Game *game) 
 {
     Move move;
@@ -58,6 +63,7 @@ int main(int argc, char** argv)
             break;
         }
 
+        game->resetDeck();
         game->rotateDealerChip();
 
         cout << "=================" << endl;
@@ -73,9 +79,37 @@ int main(int argc, char** argv)
         game->distributeCards();
         me->printHand();
 
-        Move move;
+        Player *turn = game->getNextPlayer(game->getBigBlindPlayer());
+        while (turn != game->getBigBlindPlayer())
+        {
+            //if (turn == me)
+            //{
+                //Do actual move
+            //}
+            //else
+            //{
+                //Perform AI move
+                if (turn == game->getSmallBlindPlayer())
+                {
+                    turn->bet(game->getPot(), SMALL_BLIND);
+                }
+                else
+                {
+                    turn->bet(game->getPot(), BIG_BLIND);
+                }
+            //}
 
-        move = doMove(game);
+            turn = game->getNextPlayer(turn);
+        }
+        //Perform big blind players move
+            //Check for now
+        cout << "Pot: $" << *(game->getPot()) << endl;
+        cin.ignore();
+
+        //Check for now
+        //Move move;
+
+        /*move = doMove(game);
         if (move == FOLD) 
         {
             continue;
@@ -91,16 +125,17 @@ int main(int argc, char** argv)
         else
         {
             
-        }
+        }*/
 
         //Flop
         cout << "====" << endl;
         cout << "Flop" << endl;
         cout << "====" << endl;
         game->flipFlop();
+        cin.ignore();
 
-        //Move
-        move = doMove(game);
+        //Moves
+        /*move = doMove(game);
         if (move == FOLD) 
         {
             continue;
@@ -116,16 +151,18 @@ int main(int argc, char** argv)
         else
         {
 
-        }
+        }*/
 
         //Turn
         cout << "====" << endl;
         cout << "Turn" << endl;
         cout << "====" << endl;
         game->flipTurn();
+        cin.ignore();
 
-        //Move
-        move = doMove(game);
+        //Check for now
+        //Moves
+        /*move = doMove(game);
         if (move == FOLD) 
         {
             continue;
@@ -141,16 +178,18 @@ int main(int argc, char** argv)
         else
         {
             
-        }
+        }*/
 
         //River
         cout << "=====" << endl;
         cout << "River" << endl;
         cout << "=====" << endl;
         game->flipRiver();
+        cin.ignore();
 
-        //Move
-        move = doMove(game);
+        //Check for now
+        //Moves
+        /*move = doMove(game);
         if (move == FOLD) 
         {
             continue;
@@ -166,9 +205,13 @@ int main(int argc, char** argv)
         else
         {
             
-        }
+        }*/
 
         //Check Results
+        //Give Pot to winner
+        cout << endl;
+        game->determineWinner();
+        cin.ignore();
 
     }
 

@@ -8,24 +8,12 @@
 #define BIG_BLIND       100
 #define DEFAULT_BET     BIG_BLIND
 
-typedef enum hands {
-    HIGH_CARD,
-    PAIR,
-    TWO_PAIR,
-    THREE_OF_A_KIND,
-    STRAIGHT,
-    FLUSH,
-    FULL_HOUSE,
-    FOUR_OF_A_KIND,
-    STRAIGHT_FLUSH,
-    ROYAL_FLUSH,
-} Hand;
-
 class Game
 {
 public:
     Game(int numPlayers);
     ~Game();
+    void resetDeck();
     Player** getPlayers();
     int getPlayerCount();
     int* getPot();
@@ -33,6 +21,7 @@ public:
     Player* getDealer();
     Player* getBigBlindPlayer();
     Player* getSmallBlindPlayer();
+    Player* getNextPlayer(Player *player);
     void flipFlop();
     void flipTurn();
     void flipRiver();
@@ -40,8 +29,7 @@ public:
     void shuffleDeck(); 
     Card* flipNextCard();
     void discardNextCard();
-    static int evaluateHand(Card *hand[]);
-    static int compareCards(const void *card1, const void *card2);
+    Player* determineWinner();
 
 private:
     Player **players;

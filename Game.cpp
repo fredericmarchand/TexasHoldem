@@ -1,6 +1,10 @@
 #include "Game.h"
 #include <cstdlib>
+#include <iostream>
 #include "Search.h"
+#include "CardUtil.h"
+
+using namespace std;
 
 Game::Game(int numPlayers)
 {
@@ -39,6 +43,11 @@ Game::~Game()
         delete deck[i];
     }
 }
+
+void Game::resetDeck()
+{
+    deckPointer = 0;
+}  
 
 Player** Game::getPlayers()
 {
@@ -99,9 +108,16 @@ Player* Game::getBigBlindPlayer()
            break;
         }
     }
-    if ((dealer - 1) == 0) {
+    if (dealer == 0) 
+    {
         return players[numPlayers-2];
     }
+    
+    if (numPlayers == 2)
+    {
+        return players[dealer];
+    }
+    return players[dealer-2];
 }
 
 Player* Game::getSmallBlindPlayer()
@@ -115,9 +131,29 @@ Player* Game::getSmallBlindPlayer()
            break;
         }
     }
-    if ((dealer - 1) == 0) {
+    if (dealer == 0) 
+    {
         return players[numPlayers-1];
     }
+    return players[dealer-1];
+}
+
+Player* Game::getNextPlayer(Player *player)
+{
+    int index = 0;
+    for (int i = 0; i < numPlayers; ++i)
+    {
+        if (player == players[i])
+        {
+            index = i;
+            break;
+        }
+    }
+    if (index == 0)
+    {
+        return players[numPlayers-1];
+    }
+    return players[index-1];
 }
 
 void Game::flipFlop()
@@ -193,137 +229,23 @@ void Game::discardNextCard()
     deckPointer++;
 }
 
-static int compareCards(const void *card1, const void *card2)
+//Needs to be more in depth
+Player* Game::determineWinner()
 {
-    return (*(Card *)card1).getCardValue() - (*(Card *)card2).getCardValue();
-}
-
-static int evaluateHand(Card *hand[])
-{
-    qsort(hand, 5, sizeof(Card), compareCards);
-    int straight,flush,three,four,full,pairs;
-    int k;
-
-    straight = flush = three = four = full = pairs = 0;
-    k = 0;
-
-    //checks for flush
-    while (k < 4 && hand[k]->getSuit() == hand[k+1]->getSuit())
-    {
-        k++;
-    }
-
-    if (k == 4)
-    {
-        flush = 1;
-    }
-
-    //checks for straight
-    k = 0;
-    while (k < 4 && hand[k]->getCardValue() == hand[k+1]->getCardValue()-1)
-    {
-        k++;
-    }
-    if (k == 4)
-    {
-        straight = 1;
-    }
-
-    //checks for fours
-    for (int i = 0; i < 2; i++)
-    {
-        k = i;
-        while (k < i+3 && hand[k]->getCardValue() == hand[k+1]->getCardValue())
+    Hand hands[numPlayers];
+    Hand best = NOTHING;
+    int playerIndex;
+    for (int i = 0; i < numPlayers; ++i) {
+        hands[i] = players[i]->bestHand(flop, turn, river);
+        if (hands[i] > best)
         {
-            k++;
+            best = hands[i];
+            playerIndex = i;
         }
-        if (k == i+3)
-        {
-            four = 1;
-        }
+        cout << endl;
     }
-
-    //checks for threes and fullhouse
-    if (!four)
-    {
-        for (int i = 0; i < 3; i++)
-        {
-            k = i;
-            while (k < i+2 && hand[k]->getCardValue() == hand[k+1]->getCardValue())
-            {
-                k++;
-            }
-            if (k == i+2)
-            {
-                three = 1;
-                if (i == 0)
-                {
-                    if (hand[3]->getCardValue() == hand[4]->getCardValue())
-                    {
-                        full = 1;
-                    }
-                }
-                else if (i == 1){
-                    if (hand[0]->getCardValue() == hand[4]->getCardValue())
-                    {
-                        full = 1;
-                    }
-                }
-                else
-                {
-                    if (hand[0]->getCardValue() == hand[1]->getCardValue())
-                    {
-                        full = 1;
-                    }
-                }
-            }
-        }
-    }
-
-    if (straight && flush)
-    {
-        return STRAIGHT_FLUSH;
-    }
-    else if (four)
-    {
-        return FOUR_OF_A_KIND;
-    }
-    else if (full)
-    {
-        return FULL_HOUSE;
-    }
-    else if (flush)
-    {
-        return FLUSH;
-    }
-    else if (straight)
-    {
-        return STRAIGHT;
-    }
-    else if (three)
-    {
-        return THREE_OF_A_KIND;
-    }
-
-    //checks for pairs
-    for (k = 0; k < 4; k++)
-    {
-        if (hand[k]->getCardValue() == hand[k+1]->getCardValue())
-        {
-            pairs++;
-        }
-    }
-
-    if (pairs == 2)
-    {
-        return TWO_PAIR;
-    }
-    else if (pairs)
-    {
-        return PAIR;
-    }
-    else
-    {
-        return HIGH_CARD;
-    }
+    players[playerIndex]->addChips(pot);
+    cout << "Player " << playerIndex << ": $" << players[playerIndex]->getChipCount() << endl;
+    pot = 0;
+    return players[playerIndex];
 }

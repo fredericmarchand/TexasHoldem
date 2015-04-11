@@ -7,7 +7,7 @@ main.o:
 Card.o:		Card.h
 			g++ -c Card.cpp -o Card.o
 
-Player.o:	Player.h
+Player.o:	Player.h CardUtil.h
 			g++ -c Player.cpp -o Player.o
 
 Game.o:		Game.h Card.h Player.h
