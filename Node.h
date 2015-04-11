@@ -4,17 +4,17 @@
 class Node
 {
 public:
-	Node();
-	~Node();
-	bool isVisited();
-	float explorationExploitationRatio();
-	int getVisits();
+    Node();
+    ~Node();
+    bool isVisited();
+    float explorationExploitationRatio();
+    int getVisits();
 
 private:
-	bool visited;
-	float winRate;
-	Node *parent;
-	int visits;
+    bool visited;
+    float winRate;
+    Node *parent;
+    int visits;
 
 };
 

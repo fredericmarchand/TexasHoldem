@@ -21,93 +21,93 @@ using namespace std;
 
 Move doMove(Game *game) 
 {
-	Move move;
-	string moveStr = "";
+    Move move;
+    string moveStr = "";
 
-	while (moveStr.compare("c") != 0 && moveStr.compare("b") != 0 && moveStr.compare("f") != 0)
-	{
-		cout << "Check (c), Bet (b), Fold (f)" << endl;
-		cin >> moveStr;
-	}
-	if (moveStr.compare("c") == 0)
-	{
-		move = CHECK;
-	}
-	if (moveStr.compare("b") == 0)
-	{
-		move = BET;
-	}
-	if (moveStr.compare("f") == 0)
-	{
-		move = FOLD;
-	}
+    while (moveStr.compare("c") != 0 && moveStr.compare("b") != 0 && moveStr.compare("f") != 0)
+    {
+        cout << "Check (c), Bet (b), Fold (f)" << endl;
+        cin >> moveStr;
+    }
+    if (moveStr.compare("c") == 0)
+    {
+        move = CHECK;
+    }
+    if (moveStr.compare("b") == 0)
+    {
+        move = BET;
+    }
+    if (moveStr.compare("f") == 0)
+    {
+        move = FOLD;
+    }
 
-	return move;
+    return move;
 }
 
 int main(int argc, char** argv) 
 {
-	Game *game = new Game(2);
-	Player *me = game->getPlayers()[0];
+    Game *game = new Game(2);
+    Player *me = game->getPlayers()[0];
 
-	while (1)
-	{
-		cout << "=================" << endl;
-		cout << "Starting new game" << endl;
-		cout << "=================" << endl;
-		game->shuffleDeck();
-		game->distributeCards();
-		me->printHand();
+    while (1)
+    {
+        cout << "=================" << endl;
+        cout << "Starting new game" << endl;
+        cout << "=================" << endl;
+        game->shuffleDeck();
+        game->distributeCards();
+        me->printHand();
 
-		Move move;
+        Move move;
 
-		move = doMove(game);
-		if (move == FOLD) 
-		{
-			continue;
-		}
+        move = doMove(game);
+        if (move == FOLD) 
+        {
+            continue;
+        }
 
-		//Flop
-		cout << "====" << endl;
-		cout << "Flop" << endl;
-		cout << "====" << endl;
-		game->flipFlop();
+        //Flop
+        cout << "====" << endl;
+        cout << "Flop" << endl;
+        cout << "====" << endl;
+        game->flipFlop();
 
-		//Move
-		move = doMove(game);
-		if (move == FOLD) 
-		{
-			continue;
-		}
+        //Move
+        move = doMove(game);
+        if (move == FOLD) 
+        {
+            continue;
+        }
 
-		//Turn
-		cout << "====" << endl;
-		cout << "Turn" << endl;
-		cout << "====" << endl;
-		game->flipTurn();
+        //Turn
+        cout << "====" << endl;
+        cout << "Turn" << endl;
+        cout << "====" << endl;
+        game->flipTurn();
 
-		//Move
-		move = doMove(game);
-		if (move == FOLD) 
-		{
-			continue;
-		}
+        //Move
+        move = doMove(game);
+        if (move == FOLD) 
+        {
+            continue;
+        }
 
-		//River
-		cout << "=====" << endl;
-		cout << "River" << endl;
-		cout << "=====" << endl;
-		game->flipRiver();
+        //River
+        cout << "=====" << endl;
+        cout << "River" << endl;
+        cout << "=====" << endl;
+        game->flipRiver();
 
-		//Move
-		move = doMove(game);
-		if (move == FOLD) 
-		{
-			continue;
-		}
+        //Move
+        move = doMove(game);
+        if (move == FOLD) 
+        {
+            continue;
+        }
 
-		//Check Results
-	}
+        //Check Results
+    }
 
     return 0;
 }

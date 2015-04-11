@@ -3,7 +3,7 @@
 
 Node::Node()
 {
-	visited = false; 
+    visited = false; 
 }
 
 Node::~Node()
@@ -12,15 +12,15 @@ Node::~Node()
 
 bool Node::isVisited()
 {
-	return visited;
+    return visited;
 }
 
 float Node::explorationExploitationRatio()
 {
-	return sqrt(ln(parent->getVisits())/visits);
+    return sqrt(ln(parent->getVisits())/visits);
 }
 
 int Node::getVisits()
 {
-	return visits;
+    return visits;
 }

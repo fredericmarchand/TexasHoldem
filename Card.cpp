@@ -25,50 +25,50 @@ CardValue Card::getCardValue()
 
 string Card::getSuitSymbol()
 {
-	switch (suit)
-	{
-	case HEARTS:
-		return "♥";
+    switch (suit)
+    {
+    case HEARTS:
+        return "♥";
     case SPADES:
-    	return "♠";
+        return "♠";
     case CLUBS:
-    	return "♣";
+        return "♣";
     case DIAMONDS:
-    	return "♣";
-	}
+        return "♣";
+    }
 }
 
 string Card::getValueSymbol()
 {
-	switch (value)
-	{
-	case TWO:
-		return " 2";
+    switch (value)
+    {
+    case TWO:
+        return " 2";
     case THREE:
-    	return " 3";
+        return " 3";
     case FOUR:
-    	return " 4";
+        return " 4";
     case FIVE:
-    	return " 5";
+        return " 5";
     case SIX:
-    	return " 6";
+        return " 6";
     case SEVEN:
-    	return " 7";
+        return " 7";
     case EIGHT:
-    	return " 8";
+        return " 8";
     case NINE:
-    	return " 9";
+        return " 9";
     case TEN:
-    	return "10";
+        return "10";
     case JACK:
-    	return " J";
+        return " J";
     case QUEEN:
-    	return " Q";
+        return " Q";
     case KING:
-    	return " K";
+        return " K";
     case ACE:
-    	return " A";
-	}
+        return " A";
+    }
 }
 
 void Card::printCard()
