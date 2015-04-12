@@ -87,6 +87,7 @@ int main(int argc, char** argv)
         printLabel("Starting new game");
         cout << "Small Blind: $" << SMALL_BLIND << endl;
         cout << "Big Blind:   $" << BIG_BLIND << endl;
+        cout << "Dealer: Player " << game->getPlayerIndex(game->getDealer()) << endl;
         game->shuffleDeck();
 
         //Blinds
@@ -96,40 +97,9 @@ int main(int argc, char** argv)
         game->distributeCards();
         me->printHand();
 
-        /*Player *turn = game->getNextPlayer(game->getBigBlindPlayer());
-        while (turn != game->getBigBlindPlayer())
-        {
-            if (PLAYERS_TURN)
-            {
-                doMove();
-            }
-            else //AI
-            {
-                //Call
-                if (turn == game->getSmallBlindPlayer())
-                {
-                    turn->bet(game->getPot(), SMALL_BLIND);
-                }
-                else
-                {
-                    turn->bet(game->getPot(), BIG_BLIND);
-                }
-            }
-
-            turn = game->getNextPlayer(turn);
-        }
-
-        //Perform big blind players move
-        if (PLAYERS_TURN)
-        {
-            //Check for now
-            doMove();
-        }
-        else //AI
-        {
-            //Check
-        }*/
+        game->playRound(me, true);
             
+        //Finish blinds round
         game->printPot();
         
         //Flop
@@ -137,6 +107,7 @@ int main(int argc, char** argv)
         game->flipFlop();
 
         //Round of betting
+        game->playRound(me, false);
 
         game->printPot();
 
@@ -145,6 +116,7 @@ int main(int argc, char** argv)
         game->flipTurn();
 
         //Round of betting
+        game->playRound(me, false);
 
         game->printPot();
 
@@ -153,6 +125,7 @@ int main(int argc, char** argv)
         game->flipRiver();
 
         //Final round of betting
+        game->playRound(me, false);
 
         game->printPot();
 

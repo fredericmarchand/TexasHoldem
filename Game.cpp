@@ -272,7 +272,11 @@ Player* Game::determineWinner()
         cout << endl;
     }
     players[playerIndex]->addChips(pot);
-    cout << "Player " << playerIndex << ": $" << players[playerIndex]->getChipCount() << endl;
+    cout << "Winner: Player " << playerIndex << endl;
+    for (int i = 0; i < numPlayers; ++i)
+    {
+        cout << "Player " << i << ": $" << players[i]->getChipCount() << endl;
+    }
     pot = 0;
     return players[playerIndex];
 }
@@ -285,17 +289,19 @@ void Game::printPot()
 
 void Game::playRound(Player *me, bool firstRound)
 {
-    Player *last = getBigBlindPlayer();
+    Player *last = NULL;
     Player *turn = NULL;
 
     //If its the first round, the players turn is the player after the big blind
     if (firstRound)
     {
         turn = getNextPlayer(getBigBlindPlayer());
+        last = getBigBlindPlayer();
     }
     else //Otherwise its the small blind player who goes first
     {
         turn = getSmallBlindPlayer();
+        last = getDealer();
     }
 
     while (turn != last)
@@ -354,6 +360,5 @@ void Game::addBetsToPot()
     for (int i = 0; i < numPlayers; ++i)
     {
         pot += players[i]->getState().bet;
-        players[i]->removeChips(players[i]->getState().bet);
     }
 }

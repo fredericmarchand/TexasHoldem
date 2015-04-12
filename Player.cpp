@@ -79,6 +79,7 @@ void Player::printHand()
         return;
     }
     printCardArray(hand, 2);
+    cout << "chips: " << chips << endl;
 }
 
 State Player::getState()
@@ -103,7 +104,7 @@ bool Player::bet(int value)
     }
     else
     {
-        chips-=value;
+        chips -= value;
         setState(BET, state.bet + value);
     }
 
@@ -122,7 +123,7 @@ void Player::fold()
 
 Move Player::doMove(int index, Player *last)
 {
-    int prob = (rand() % 3);
+    int prob = 2;//(rand() % 3);
     cout << "Player " << index << ": ";
     switch (prob) 
     {
@@ -145,7 +146,7 @@ Move Player::doMove(int index, Player *last)
             check();
             if (last->getState().bet > state.bet)
             {
-              bet(DEFAULT_BET);
+              bet(last->getState().bet - state.bet);
               cout << "call" << endl;
             }
             else
