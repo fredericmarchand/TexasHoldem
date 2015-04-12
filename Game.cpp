@@ -59,9 +59,9 @@ int Game::getPlayerCount()
     return numPlayers;
 }
 
-int* Game::getPot()
+int Game::getPot()
 {
-    return &pot;
+    return pot;
 }
 
 void Game::rotateDealerChip()

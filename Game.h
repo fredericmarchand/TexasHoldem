@@ -12,7 +12,7 @@ public:
     void resetDeck();
     Player** getPlayers();
     int getPlayerCount();
-    int* getPot();
+    int getPot();
     void rotateDealerChip();
     Player* getDealer();
     Player* getBigBlindPlayer();
