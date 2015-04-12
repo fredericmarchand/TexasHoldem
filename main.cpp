@@ -7,10 +7,6 @@
 #include <cilk/cilk.h>
 #include <cilktools/cilkview.h>
 #include <iostream>
-#include <fstream>
-#include <vector>
-#include <algorithm>
-#include <cmath>
 #include <string>
 using namespace std;
 
@@ -31,32 +27,6 @@ void printLabel(string label)
         cout << "=";
     }
     cout << endl;
-}
-
-Move doMove() 
-{
-    Move move;
-    string moveStr = "";
-
-    while (moveStr.compare("c") != 0 && moveStr.compare("b") != 0 && moveStr.compare("f") != 0)
-    {
-        cout << "Check/Call (c), Bet/Raise (b), Fold (f)" << endl;
-        cin >> moveStr;
-    }
-    if (moveStr.compare("c") == 0)
-    {
-        move = CHECK;
-    }
-    if (moveStr.compare("b") == 0)
-    {
-        move = BET;
-    }
-    if (moveStr.compare("f") == 0)
-    {
-        move = FOLD;
-    }
-
-    return move;
 }
 
 int main(int argc, char** argv) 

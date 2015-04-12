@@ -35,6 +35,7 @@ public:
     void addBetsToPot();
     bool checkLastPlayerRemaining(Player *player);
     void givePotToWinner(Player *winner);
+    Move getMove();
 
 private:
     Player **players;

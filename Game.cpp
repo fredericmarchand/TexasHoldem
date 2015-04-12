@@ -350,7 +350,8 @@ bool Game::playRound(Player *me, bool firstRound)
         Move move = CHECK;
         if (turn == me && !me->isAI())
         {
-            move = me->doMove(move);
+            Move move = getMove();
+            me->doMove(move);
         }
         else
         {
@@ -410,7 +411,7 @@ void Game::addBetsToPot()
     for (int i = 0; i < numPlayers; ++i)
     {
         pot += players[i]->getState().bet;
-        players[i]->setState(players[i]->getState().move, 0);
+        //players[i]->setState(players[i]->getState().move, 0);
     }
 }
 
@@ -428,4 +429,30 @@ bool Game::checkLastPlayerRemaining(Player *player)
         }
     }
     return ret;
+}
+
+Move Game::getMove()
+{
+    Move move;
+    string moveStr = "";
+
+    while (moveStr.compare("c") != 0 && moveStr.compare("b") != 0 && moveStr.compare("f") != 0)
+    {
+        cout << "Check/Call (c), Bet/Raise (b), Fold (f)" << endl;
+        cin >> moveStr;
+    }
+    if (moveStr.compare("c") == 0)
+    {
+        move = CHECK;
+    }
+    if (moveStr.compare("b") == 0)
+    {
+        move = BET;
+    }
+    if (moveStr.compare("f") == 0)
+    {
+        move = FOLD;
+    }
+
+    return move;
 }
