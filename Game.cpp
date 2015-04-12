@@ -304,7 +304,7 @@ void Game::playRound(Player *me, bool firstRound)
         last = getDealer();
     }
 
-    while (turn != last)
+    while (1)
     {
         if (turn->getState().move == FOLD)
         {
@@ -325,13 +325,18 @@ void Game::playRound(Player *me, bool firstRound)
         //handle move
         if (move == BET)
         {
-            last = turn;
+            last = getPreviousPlayer(turn);
+        }
+
+        if (turn == last)
+        {
+            break;
         }
 
         turn = getNextPlayer(turn);
     }
 
-    Move move = CHECK;
+    /*Move move = CHECK;
     if (turn == me && !me->isAI())
     {
         move = me->doMove(move);
@@ -339,9 +344,7 @@ void Game::playRound(Player *me, bool firstRound)
     else
     {
         move = turn->doMove(getPlayerIndex(turn), getPreviousPlayer(turn));
-    }
-
-    //handle move
+    }*/
 
     addBetsToPot();
     clearPlayerStates();

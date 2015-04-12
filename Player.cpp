@@ -123,7 +123,8 @@ void Player::fold()
 
 Move Player::doMove(int index, Player *last)
 {
-    int prob = 2;//(rand() % 3);
+    int prob = (rand() % 2) + 1;
+    //cout << "Last: " << last->getState().bet << " curr: " << getState().bet << endl;
     cout << "Player " << index << ": ";
     switch (prob) 
     {
@@ -132,25 +133,30 @@ Move Player::doMove(int index, Player *last)
             cout << "fold" << endl;
             return FOLD;
         case 1:
-            bet(DEFAULT_BET);
-            if (last->getState().bet > state.bet)
+            if (last->getState().bet >= state.bet)
+            {
+                bet(DEFAULT_BET + (last->getState().bet - getState().bet));
+                cout << "raise " << DEFAULT_BET << " to " << getState().bet << endl;
+            }
+            else
             {
                 bet(DEFAULT_BET);
                 cout << "bet " << DEFAULT_BET << endl;
             }
-            else
-                cout << "raise " << DEFAULT_BET << " to " << state.bet << endl;
             return BET;
         case 2:
         default:
-            check();
-            if (last->getState().bet > state.bet)
+            if (last->getState().bet > getState().bet)
             {
-              bet(last->getState().bet - state.bet);
-              cout << "call" << endl;
+                bet(last->getState().bet - getState().bet);
+                check();
+                cout << "call" << endl;
             }
             else
+            {
+                check();
                 cout << "check" << endl;
+            }
             return CHECK;      
     }
 }
