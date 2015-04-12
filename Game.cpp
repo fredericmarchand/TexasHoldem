@@ -247,3 +247,9 @@ Player* Game::determineWinner()
     pot = 0;
     return players[playerIndex];
 }
+
+void Game::printPot()
+{
+    cout << "Pot: $" << pot << endl;
+    cin.ignore();
+}

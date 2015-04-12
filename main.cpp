@@ -20,11 +20,6 @@ using namespace std;
 #define DEBUG 0
 #define PLAYERS_TURN (turn == me && !AI_game)
 
-Move aiMove(Game *game) 
-{
-    return CHECK;
-}
-
 void printLabel(string label)
 {
     for (int i = 0; i < label.length(); ++i)
@@ -39,7 +34,7 @@ void printLabel(string label)
     cout << endl;
 }
 
-Move doMove(Game *game) 
+Move doMove() 
 {
     Move move;
     string moveStr = "";
@@ -73,10 +68,13 @@ int main(int argc, char** argv)
     me->setDealer(true);
 
     if (argc > 1)
+    {
         AI_game = true;
+    }
 
     while (1)
     {
+        //Check if the game is over
         if (game->getPlayers()[0]->getChipCount() == 0 || game->getPlayers()[1]->getChipCount() == 0)
         {
             break;
@@ -88,7 +86,7 @@ int main(int argc, char** argv)
         printLabel("Starting new game");
         game->shuffleDeck();
 
-        //blinds
+        //Blinds
         game->getSmallBlindPlayer()->bet(game->getPot(), SMALL_BLIND);
         game->getBigBlindPlayer()->bet(game->getPot(), BIG_BLIND);
         cout << "Pot: $" << *(game->getPot()) << endl;
@@ -101,10 +99,11 @@ int main(int argc, char** argv)
         {
             if (PLAYERS_TURN)
             {
-                doMove(game);
+                doMove();
             }
             else //AI
             {
+                //Call
                 if (turn == game->getSmallBlindPlayer())
                 {
                     turn->bet(game->getPot(), SMALL_BLIND);
@@ -121,15 +120,14 @@ int main(int argc, char** argv)
         if (PLAYERS_TURN)
         {
             //Check for now
-            doMove(game);
+            doMove();
         }
         else //AI
         {
             //Check
         }
             
-        cout << "Pot: $" << *(game->getPot()) << endl;
-        cin.ignore();
+        game->printPot();
         
         //Flop
         printLabel("Flop");
@@ -137,8 +135,7 @@ int main(int argc, char** argv)
 
         //Round of betting
 
-        cout << "Pot: $" << *(game->getPot()) << endl;
-        cin.ignore();
+        game->printPot();
 
         //Turn
         printLabel("Turn");
@@ -146,18 +143,15 @@ int main(int argc, char** argv)
 
         //Round of betting
 
-        cout << "Pot: $" << *(game->getPot()) << endl;
-        cin.ignore();
+        game->printPot();
 
         //River
         printLabel("River");
         game->flipRiver();
-        cout << "Pot: $" << *(game->getPot()) << endl;
-        cin.ignore();
 
         //Final round of betting
 
-        cout << "Pot: $" << *(game->getPot()) << endl;
+        game->printPot();
 
         //Check Results and give pot to winner
         cout << endl;
@@ -165,7 +159,10 @@ int main(int argc, char** argv)
         cin.ignore();
     }
 
+    //Print winner
     cout << "The winner is: " << (game->getPlayers()[0]->getChipCount() == 0 ? "Player 2" : "Player 1") << endl;
+
+    delete game;
 
     return 0;
 }

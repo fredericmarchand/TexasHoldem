@@ -30,6 +30,7 @@ public:
     Card* flipNextCard();
     void discardNextCard();
     Player* determineWinner();
+    void printPot();
 
 private:
     Player **players;
