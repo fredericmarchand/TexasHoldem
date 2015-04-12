@@ -29,9 +29,12 @@ public:
     void discardNextCard();
     Player* determineWinner();
     void printPot();
-    void playRound(Player *me, bool firstRound);
+    bool playRound(Player *me, bool firstRound);
     void clearPlayerStates();
+    void setPlayerStates();
     void addBetsToPot();
+    bool checkLastPlayerRemaining(Player *player);
+    void givePotToWinner(Player *winner);
 
 private:
     Player **players;

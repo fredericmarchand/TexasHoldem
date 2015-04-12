@@ -18,7 +18,6 @@ using namespace std;
 #include "Player.h"
 
 #define DEBUG 0
-#define PLAYERS_TURN (turn == me && !AI_game)
 
 void printLabel(string label)
 {
@@ -41,7 +40,7 @@ Move doMove()
 
     while (moveStr.compare("c") != 0 && moveStr.compare("b") != 0 && moveStr.compare("f") != 0)
     {
-        cout << "Check (c), Bet (b), Fold (f)" << endl;
+        cout << "Check/Call (c), Bet/Raise (b), Fold (f)" << endl;
         cin >> moveStr;
     }
     if (moveStr.compare("c") == 0)
@@ -82,6 +81,7 @@ int main(int argc, char** argv)
         }
 
         game->resetDeck();
+        game->clearPlayerStates();
         game->rotateDealerChip();
 
         printLabel("Starting new game");
@@ -97,8 +97,9 @@ int main(int argc, char** argv)
         game->distributeCards();
         me->printHand();
 
-        game->playRound(me, true);
-            
+        if (game->playRound(me, true) == true)
+            goto end;
+
         //Finish blinds round
         game->printPot();
         
@@ -107,7 +108,8 @@ int main(int argc, char** argv)
         game->flipFlop();
 
         //Round of betting
-        game->playRound(me, false);
+        if (game->playRound(me, false))
+            goto end;
 
         game->printPot();
 
@@ -116,7 +118,8 @@ int main(int argc, char** argv)
         game->flipTurn();
 
         //Round of betting
-        game->playRound(me, false);
+        if (game->playRound(me, false))
+            goto end;
 
         game->printPot();
 
@@ -129,6 +132,7 @@ int main(int argc, char** argv)
 
         game->printPot();
 
+end:
         //Check Results and give pot to winner
         cout << endl;
         game->determineWinner();

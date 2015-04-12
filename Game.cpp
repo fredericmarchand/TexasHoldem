@@ -259,6 +259,16 @@ void Game::discardNextCard()
 //Needs to be more in depth
 Player* Game::determineWinner()
 {
+    //Check if everyone folded but one person
+    for (int i = 0; i < numPlayers; ++i)
+    {
+        if (checkLastPlayerRemaining(players[i]) == true)
+        {
+            givePotToWinner(players[i]);
+            return players[i];
+        }
+    }
+
     Hand hands[numPlayers];
     Hand best = NOTHING;
     int playerIndex;
@@ -271,14 +281,21 @@ Player* Game::determineWinner()
         }
         cout << endl;
     }
-    players[playerIndex]->addChips(pot);
-    cout << "Winner: Player " << playerIndex << endl;
+
+    givePotToWinner(players[playerIndex]);
+
+    return players[playerIndex];
+}
+
+void Game::givePotToWinner(Player *winner)
+{
+    winner->addChips(pot);
+    cout << "Winner: Player " << getPlayerIndex(winner) << endl;
     for (int i = 0; i < numPlayers; ++i)
     {
         cout << "Player " << i << ": $" << players[i]->getChipCount() << endl;
     }
     pot = 0;
-    return players[playerIndex];
 }
 
 void Game::printPot()
@@ -287,7 +304,7 @@ void Game::printPot()
     cin.ignore();
 }
 
-void Game::playRound(Player *me, bool firstRound)
+bool Game::playRound(Player *me, bool firstRound)
 {
     Player *last = NULL;
     Player *turn = NULL;
@@ -306,6 +323,11 @@ void Game::playRound(Player *me, bool firstRound)
 
     while (1)
     {
+        if (checkLastPlayerRemaining(turn) == true)
+        {
+            break;
+        }
+
         if (turn->getState().move == FOLD)
         {
             turn = getNextPlayer(turn);
@@ -322,12 +344,13 @@ void Game::playRound(Player *me, bool firstRound)
             move = me->doMove(getPlayerIndex(turn), getPreviousPlayer(turn));
         }
 
-        //handle move
+        // Change last player to make a move
         if (move == BET)
         {
             last = getPreviousPlayer(turn);
         }
 
+        // Exit condition
         if (turn == last)
         {
             break;
@@ -336,18 +359,30 @@ void Game::playRound(Player *me, bool firstRound)
         turn = getNextPlayer(turn);
     }
 
-    /*Move move = CHECK;
-    if (turn == me && !me->isAI())
-    {
-        move = me->doMove(move);
-    }
-    else
-    {
-        move = turn->doMove(getPlayerIndex(turn), getPreviousPlayer(turn));
-    }*/
-
     addBetsToPot();
-    clearPlayerStates();
+    
+
+    for (int i = 0; i < numPlayers; ++i)
+    {
+        if (checkLastPlayerRemaining(players[i]) == true)
+        {
+            return true;
+        }
+    }
+
+    setPlayerStates();
+    return false;
+}
+
+void Game::setPlayerStates()
+{
+    for (int i = 0; i < numPlayers; ++i)
+    {
+        if (players[i]->getState().move != FOLD)
+        {
+            players[i]->setState(CHECK, 0);
+        }
+    }
 }
 
 void Game::clearPlayerStates()
@@ -364,4 +399,20 @@ void Game::addBetsToPot()
     {
         pot += players[i]->getState().bet;
     }
+}
+
+bool Game::checkLastPlayerRemaining(Player *player)
+{
+    bool ret = true;
+    if (player->getState().move == FOLD)
+        return false;
+
+    for (int i = 0; i < numPlayers; ++i)
+    {
+        if (players[i] != player)
+        {
+            ret &= (players[i]->getState().move == FOLD);
+        }
+    }
+    return ret;
 }
