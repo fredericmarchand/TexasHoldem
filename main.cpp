@@ -62,14 +62,15 @@ Move doMove()
 
 int main(int argc, char** argv) 
 {
-    bool AI_game = false;
+    bool AI_game = true;
     Game *game = new Game(2);
     Player *me = game->getPlayers()[0];
     me->setDealer(true);
 
     if (argc > 1)
     {
-        AI_game = true;
+        AI_game = false;
+        me->setAI(false);
     }
 
     while (1)
@@ -84,17 +85,18 @@ int main(int argc, char** argv)
         game->rotateDealerChip();
 
         printLabel("Starting new game");
+        cout << "Small Blind: $" << SMALL_BLIND << endl;
+        cout << "Big Blind:   $" << BIG_BLIND << endl;
         game->shuffleDeck();
 
         //Blinds
-        game->getSmallBlindPlayer()->bet(game->getPot(), SMALL_BLIND);
-        game->getBigBlindPlayer()->bet(game->getPot(), BIG_BLIND);
-        cout << "Pot: $" << *(game->getPot()) << endl;
+        game->getSmallBlindPlayer()->bet(SMALL_BLIND);
+        game->getBigBlindPlayer()->bet(BIG_BLIND);
 
         game->distributeCards();
         me->printHand();
 
-        Player *turn = game->getNextPlayer(game->getBigBlindPlayer());
+        /*Player *turn = game->getNextPlayer(game->getBigBlindPlayer());
         while (turn != game->getBigBlindPlayer())
         {
             if (PLAYERS_TURN)
@@ -116,6 +118,7 @@ int main(int argc, char** argv)
 
             turn = game->getNextPlayer(turn);
         }
+
         //Perform big blind players move
         if (PLAYERS_TURN)
         {
@@ -125,7 +128,7 @@ int main(int argc, char** argv)
         else //AI
         {
             //Check
-        }
+        }*/
             
         game->printPot();
         

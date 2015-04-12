@@ -4,10 +4,6 @@
 #include "Player.h"
 #include "Card.h"
 
-#define SMALL_BLIND     50
-#define BIG_BLIND       100
-#define DEFAULT_BET     BIG_BLIND
-
 class Game
 {
 public:
@@ -22,6 +18,8 @@ public:
     Player* getBigBlindPlayer();
     Player* getSmallBlindPlayer();
     Player* getNextPlayer(Player *player);
+    Player* getPreviousPlayer(Player *player);
+    int getPlayerIndex(Player *player);
     void flipFlop();
     void flipTurn();
     void flipRiver();
@@ -31,6 +29,9 @@ public:
     void discardNextCard();
     Player* determineWinner();
     void printPot();
+    void playRound(Player *me, bool firstRound);
+    void clearPlayerStates();
+    void addBetsToPot();
 
 private:
     Player **players;

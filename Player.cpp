@@ -9,7 +9,8 @@ Player::Player()
     hand[1] = NULL;
     dealer = false;
     this->chips = 1000;
-    state = CHECK;
+    state.move = CHECK;
+    state.bet = 0;
     ai = true;
 }
 
@@ -19,7 +20,8 @@ Player::Player(int chips, bool ai)
     hand[1] = NULL;
     dealer = false;
     this->chips = chips;
-    state = CHECK;
+    state.move = CHECK;
+    state.bet = 0;
     this->ai = ai;
 }
 
@@ -44,6 +46,11 @@ int Player::addChips(int pot)
     chips += pot;
 }
 
+int Player::removeChips(int amount)
+{
+    chips -= amount;
+}
+
 bool Player::isDealer()
 {
     return dealer;
@@ -52,6 +59,11 @@ bool Player::isDealer()
 bool Player::isAI()
 {
     return ai;
+}
+
+void Player::setAI(bool ai)
+{
+    this->ai = ai;
 }
 
 void Player::setDealer(bool deal)
@@ -69,32 +81,82 @@ void Player::printHand()
     printCardArray(hand, 2);
 }
 
-Move Player::getState()
+State Player::getState()
 {
     return state;
 }
 
-void Player::setState(Move move)
+void Player::setState(Move move, int bet)
 {
-    state = move;
+    state.move = move;
+    state.bet = bet;
 }
 
-bool Player::bet(int *pot, int value)
+bool Player::bet(int value)
 {
     bool allIn = false;
 
     if ((chips - value) <= 0) {
         allIn =  true;
-        (*pot)+=chips;
         chips = 0;
+        setState(BET, state.bet + chips);
     }
     else
     {
-        (*pot)+=value;
         chips-=value;
+        setState(BET, state.bet + value);
     }
 
     return allIn;
+}
+
+void Player::check()
+{
+    setState(CHECK, state.bet);
+}
+
+void Player::fold()
+{
+    setState(FOLD, state.bet);
+}
+
+Move Player::doMove(int index, Player *last)
+{
+    int prob = (rand() % 3);
+    cout << "Player " << index << ": ";
+    switch (prob) 
+    {
+        case 0:
+            fold();
+            cout << "fold" << endl;
+            return FOLD;
+        case 1:
+            bet(DEFAULT_BET);
+            if (last->getState().bet > state.bet)
+            {
+                bet(DEFAULT_BET);
+                cout << "bet " << DEFAULT_BET << endl;
+            }
+            else
+                cout << "raise " << DEFAULT_BET << " to " << state.bet << endl;
+            return BET;
+        case 2:
+        default:
+            check();
+            if (last->getState().bet > state.bet)
+            {
+              bet(DEFAULT_BET);
+              cout << "call" << endl;
+            }
+            else
+                cout << "check" << endl;
+            return CHECK;      
+    }
+}
+
+Move Player::doMove(Move move)
+{
+    return move;
 }
 
 void checkHand(Card **combo, Card **retCombo, Hand *maxValue)

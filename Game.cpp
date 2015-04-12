@@ -156,6 +156,35 @@ Player* Game::getNextPlayer(Player *player)
     return players[index-1];
 }
 
+Player* Game::getPreviousPlayer(Player *player)
+{
+    int index = 0;
+    for (int i = 0; i < numPlayers; ++i)
+    {
+        if (player == players[i])
+        {
+            index = i;
+            break;
+        }
+    }
+    if (index == numPlayers-1)
+    {
+        return players[0];
+    }
+    return players[index+1];
+}
+
+int Game::getPlayerIndex(Player *player)
+{
+    for (int i = 0; i < numPlayers; ++i)
+    {
+        if (player == players[i])
+        {
+            return i;
+        }
+    }
+}
+
 void Game::flipFlop()
 {
     discardNextCard();
@@ -252,4 +281,79 @@ void Game::printPot()
 {
     cout << "Pot: $" << pot << endl;
     cin.ignore();
+}
+
+void Game::playRound(Player *me, bool firstRound)
+{
+    Player *last = getBigBlindPlayer();
+    Player *turn = NULL;
+
+    //If its the first round, the players turn is the player after the big blind
+    if (firstRound)
+    {
+        turn = getNextPlayer(getBigBlindPlayer());
+    }
+    else //Otherwise its the small blind player who goes first
+    {
+        turn = getSmallBlindPlayer();
+    }
+
+    while (turn != last)
+    {
+        if (turn->getState().move == FOLD)
+        {
+            turn = getNextPlayer(turn);
+            continue;
+        }
+
+        Move move = CHECK;
+        if (turn == me && !me->isAI())
+        {
+            move = me->doMove(move);
+        }
+        else
+        {
+            move = me->doMove(getPlayerIndex(turn), getPreviousPlayer(turn));
+        }
+
+        //handle move
+        if (move == BET)
+        {
+            last = turn;
+        }
+
+        turn = getNextPlayer(turn);
+    }
+
+    Move move = CHECK;
+    if (turn == me && !me->isAI())
+    {
+        move = me->doMove(move);
+    }
+    else
+    {
+        move = turn->doMove(getPlayerIndex(turn), getPreviousPlayer(turn));
+    }
+
+    //handle move
+
+    addBetsToPot();
+    clearPlayerStates();
+}
+
+void Game::clearPlayerStates()
+{
+    for (int i = 0; i < numPlayers; ++i)
+    {
+        players[i]->setState(CHECK, 0);
+    }
+}
+
+void Game::addBetsToPot()
+{
+    for (int i = 0; i < numPlayers; ++i)
+    {
+        pot += players[i]->getState().bet;
+        players[i]->removeChips(players[i]->getState().bet);
+    }
 }

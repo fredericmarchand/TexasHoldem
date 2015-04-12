@@ -4,13 +4,20 @@
 #include "Card.h"
 #include "CardUtil.h"
 
+#define SMALL_BLIND     50
+#define BIG_BLIND       100
+#define DEFAULT_BET     BIG_BLIND
+
 typedef enum moves {
     FOLD,
-    CHECK,
-    BET,
-    CALL,
-    ALL_IN,
+    CHECK,  // CHECK / CALL
+    BET,    // BET / RAISE
 } Move;
+
+typedef struct playerState {
+    Move move;
+    int bet;
+} State;
 
 class Player
 {
@@ -21,20 +28,26 @@ public:
     void addCardToHand(Card *newCard, int i);
     int getChipCount();
     int addChips(int pot);
+    int removeChips(int amount);
     bool isDealer();
     bool isAI();
+    void setAI(bool ai);
     void setDealer(bool deal);
     void printHand();
-    Move getState();
-    void setState(Move move);
-    bool bet(int *pot, int value);
+    State getState();
+    void setState(Move move, int bet);
+    bool bet(int value);
+    void check();
+    void fold();
     Hand bestHand(Card** flop, Card *turn, Card *river);
+    Move doMove(int index, Player *last);
+    Move doMove(Move move);
 
 private:
     Card *hand[2];
     int chips;
     bool dealer;
-    Move state;
+    State state;
     bool ai;
 };
 
