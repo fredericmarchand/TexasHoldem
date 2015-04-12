@@ -123,7 +123,7 @@ void Player::fold()
 
 Move Player::doMove(int index, Player *last)
 {
-    int prob = (rand() % 3);
+    int prob = (rand() % 2)+1;
     cout << "Player " << index << ": ";
     switch (prob) 
     {

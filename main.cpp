@@ -140,7 +140,7 @@ end:
     }
 
     //Print winner
-    cout << "The winner is: " << (game->getPlayers()[0]->getChipCount() == 0 ? "Player 2" : "Player 1") << endl;
+    cout << "The winner is: " << (game->getPlayers()[0]->getChipCount() == 0 ? "Player 1" : "Player 0") << endl;
 
     delete game;
 

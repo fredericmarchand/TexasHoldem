@@ -167,11 +167,17 @@ Player* Game::getPreviousPlayer(Player *player)
             break;
         }
     }
-    if (index == numPlayers-1)
-    {
-        return players[0];
+
+    do {
+        index++;
+        if (index == numPlayers)
+        {
+            index = 0;
+        }
     }
-    return players[index+1];
+    while (players[index]->getState().move == FOLD);
+
+    return players[index];
 }
 
 int Game::getPlayerIndex(Player *player)
@@ -274,11 +280,13 @@ Player* Game::determineWinner()
     int playerIndex;
     for (int i = 0; i < numPlayers; ++i) {
         hands[i] = players[i]->bestHand(flop, turn, river);
+
         if (hands[i] > best)
         {
             best = hands[i];
             playerIndex = i;
         }
+        cout << "Hand: " << hands[i] << endl;
         cout << endl;
     }
 
@@ -300,6 +308,11 @@ void Game::givePotToWinner(Player *winner)
 
 void Game::printPot()
 {
+    cout << endl;
+    for (int i = 0; i < numPlayers; ++i)
+    {
+        cout << "Player " << i << ": $" << players[i]->getChipCount() << endl;
+    }
     cout << "Pot: $" << pot << endl;
     cin.ignore();
 }
@@ -341,7 +354,7 @@ bool Game::playRound(Player *me, bool firstRound)
         }
         else
         {
-            move = me->doMove(getPlayerIndex(turn), getPreviousPlayer(turn));
+            move = turn->doMove(getPlayerIndex(turn), getPreviousPlayer(turn));
         }
 
         // Change last player to make a move
@@ -360,7 +373,7 @@ bool Game::playRound(Player *me, bool firstRound)
     }
 
     addBetsToPot();
-    
+    setPlayerStates();
 
     for (int i = 0; i < numPlayers; ++i)
     {
@@ -370,7 +383,6 @@ bool Game::playRound(Player *me, bool firstRound)
         }
     }
 
-    setPlayerStates();
     return false;
 }
 
@@ -398,6 +410,7 @@ void Game::addBetsToPot()
     for (int i = 0; i < numPlayers; ++i)
     {
         pot += players[i]->getState().bet;
+        players[i]->setState(players[i]->getState().move, 0);
     }
 }
 
