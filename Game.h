@@ -4,6 +4,8 @@
 #include "Player.h"
 #include "Card.h"
 
+#define TOTAL_CARDS 52
+
 class Game
 {
 public:
@@ -45,7 +47,7 @@ private:
     Card *turn;
     Card *river;
     int deckPointer;
-    Card *deck[52];
+    Card *deck[TOTAL_CARDS];
 };
 
 #endif //GAME_H

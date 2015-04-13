@@ -38,7 +38,7 @@ Game::~Game()
     }
     delete [] players;
 
-    for (int i = 0; i < 52; ++i)
+    for (int i = 0; i < TOTAL_CARDS; ++i)
     {
         delete deck[i];
     }
@@ -240,7 +240,7 @@ void Game::shuffleDeck()
  
     // Start from the last element and swap one by one. We don't
     // need to run for the first element that's why i > 0
-    for (int i = 51; i >= 0; i--)
+    for (int i = TOTAL_CARDS-1; i >= 0; i--)
     {
         // Pick a random index from 0 to i
         int j = rand() % (i+1);

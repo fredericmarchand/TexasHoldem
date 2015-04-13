@@ -4,16 +4,64 @@
 #include "Node.h"
 #include "Game.h"
 #include "Player.h"
+#include "NodeState.h"
+#include <cstdlib>
 
-static void UCTSearch(Node *startState, int depth)
+
+static Move UCTSearch(NodeState *startState, int maxIter)
 {
+	Node *root = new Node(startState);
+	for (int i = 0; i < maxIter; ++i)
+	{
+		Node *node = root;
+		NodeState *state = root->getState();
 
-}
+		//Select
+		while (node->getUntriedMoves()->empty() && !node->getChildren()->empty()) //node is fully expanded and non-terminal
+		{
+			node = node->getUCB();
+			state->doMove(node->getMove());
+		}
 
-/* Moves is output parameter */
-static void possibleMoves(Game *game, Player *player, Move moves[])
-{
+		//Expand
+		if (!node->getUntriedMoves()->empty()) //if we can expand (i.e., state/node is non-terminal)
+		{
+			srand ( time(NULL) );
+        	Move move = node->getUntriedMoves()->at(rand() % (node->getUntriedMoves()->size()));
+        	state->doMove(move);
+        	node = node->addChild(move, state); //Add child and descend tree
+		}
 
+		//Rollout
+		while (!state->getMoves()->empty()) //While state is non-terminal
+		{
+			srand ( time(NULL) );
+			state->doMove(state->getMoves()->at(rand() % (state->getMoves()->size())));
+		}
+
+		//Backpropagate
+		while (node != NULL)
+		{
+			node->update(state->getResult(node->playerJustMoved()));
+			node = node->getParent();
+		}
+	}
+
+	Move moveToDo;
+	int highest = 0;
+	for (int i = 0; i < root->getChildren()->size(); ++i)
+	{
+		Node *child = root->getChildren()->at(i);
+		if (child->getVisits() > highest)
+		{
+			highest = child->getVisits();
+			moveToDo = child->getMove();
+		}
+	}
+
+	delete root;
+	
+	return moveToDo; //Return the move that was the most visited
 }
 
 #endif //SEARCH_H
