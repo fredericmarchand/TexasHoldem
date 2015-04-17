@@ -10,6 +10,7 @@ class Game
 {
 public:
     Game(int numPlayers);
+    Game(Game *game);
     ~Game();
     void resetDeck();
     Player** getPlayers();

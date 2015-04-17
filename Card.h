@@ -31,6 +31,7 @@ class Card
 {
 public:
     Card(Suit suit, CardValue value);
+    Card(Card *card);
     ~Card();
     Suit getSuit();
     CardValue getCardValue();

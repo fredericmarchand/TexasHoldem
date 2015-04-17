@@ -25,7 +25,7 @@ vector<Move>* NodeState::getMoves()
 
 void NodeState::doMove(Move move)
 {
-
+	
 }
 
 int NodeState::getResult(bool playerJustMoved)

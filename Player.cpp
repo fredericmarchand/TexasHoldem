@@ -25,6 +25,17 @@ Player::Player(int chips, bool ai)
     this->ai = ai;
 }
 
+Player::Player(Player *player)
+{
+    hand[0] = player->hand[0];
+    hand[1] = player->hand[1];
+    dealer = player->dealer;
+    chips = player->chips;
+    state.move = player->state.move;
+    state.bet = player->state.bet;
+    ai = player->ai;
+}
+
 Player::~Player()
 {
     hand[0] = NULL;

@@ -24,6 +24,7 @@ class Player
 public:
     Player();
     Player(int chips, bool ai);
+    Player(Player *player);
     ~Player();
     void addCardToHand(Card *newCard, int i);
     int getChipCount();

@@ -30,6 +30,24 @@ Game::Game(int numPlayers)
     }
 }
 
+Game::Game(Game *game)
+{
+    numPlayers = game->getPlayerCount();
+    players = new Player*[numPlayers];
+    for (int i = 0; i < numPlayers; ++i)
+    {
+        players[i] = new Player(game->getPlayers()[i]);
+    }
+    
+    deckPointer = game->deckPointer;
+
+    for (int i = 0; i < TOTAL_CARDS; ++i)
+    {
+        Card *card = new Card(game->deck[i]);
+        deck[i] = card;
+    }
+}
+
 Game::~Game()
 {
     for (int i = 0; i < numPlayers; ++i)

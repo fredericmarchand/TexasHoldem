@@ -9,6 +9,12 @@ Card::Card(Suit suit, CardValue value)
     this->value = value;
 }
 
+Card::Card(Card *card)
+{
+    suit = card->suit;
+    value = card->value;
+}
+
 Card::~Card()
 {
 }
