@@ -1,11 +1,11 @@
 /*
- * TexasHoldemAI.cilk
+ * Texas Holdem AI
  * 
  * Frederic Marchand
  */
 
-#include <cilk/cilk.h>
-#include <cilktools/cilkview.h>
+//#include <cilk/cilk.h>
+//#include <cilktools/cilkview.h>
 #include <iostream>
 #include <string>
 using namespace std;
