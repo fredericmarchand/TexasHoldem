@@ -26,7 +26,6 @@ public:
     Node* addChild(Move move, NodeState *state);
     bool playerJustMoved();
 
-
 private:
     int wins;
     Node *parent;

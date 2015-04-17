@@ -13,7 +13,7 @@ Node::Node(NodeState *state)
     parent = NULL;
     visits = 0;
     this->state = state;
-    untriedMoves = *state->getMoves();
+    untriedMoves = *(state->getMoves());
 }
 
 Node::Node(Move move, Node *parent, NodeState *state)
@@ -22,7 +22,7 @@ Node::Node(Move move, Node *parent, NodeState *state)
     visits = 0;
     this->move = move;
     this->state = state;
-    untriedMoves = *state->getMoves();
+    untriedMoves = *(state->getMoves());
 }
 
 Node::~Node()
@@ -79,7 +79,7 @@ NodeState* Node::getState()
 
 Node* Node::getParent()
 {
-
+	return parent;
 }
 
 //TODO: IMPLEMENT
