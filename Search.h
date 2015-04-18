@@ -7,6 +7,8 @@
 #include "NodeState.h"
 #include <cstdlib>
 
+#define DEBUG 0
+#define UCT_DEPTH 3
 
 static Move UCTSearch(NodeState *startState, int maxIter)
 {
@@ -17,6 +19,9 @@ static Move UCTSearch(NodeState *startState, int maxIter)
 		NodeState *state = root->getState();
 
 		//Select
+#if DEBUG == 1
+		cout << "Select" << endl;
+#endif
 		while (node->getUntriedMoves()->empty() && !node->getChildren()->empty()) //node is fully expanded and non-terminal
 		{
 			node = node->getUCB();
@@ -24,6 +29,9 @@ static Move UCTSearch(NodeState *startState, int maxIter)
 		}
 
 		//Expand
+#if DEBUG == 1
+		cout << "Expand" << endl;
+#endif
 		if (!node->getUntriedMoves()->empty()) //if we can expand (i.e., state/node is non-terminal)
 		{
 			srand ( time(NULL) );
@@ -31,15 +39,22 @@ static Move UCTSearch(NodeState *startState, int maxIter)
         	state->doMove(move);
         	node = node->addChild(move, state); //Add child and descend tree
 		}
-
+		
 		//Rollout
+#if DEBUG == 1
+		cout << "Rollout" << endl;
+#endif
 		while (!state->getMoves()->empty()) //While state is non-terminal
 		{
 			srand ( time(NULL) );
+			//cout << state->getMoves()->size() << endl;
 			state->doMove(state->getMoves()->at(rand() % (state->getMoves()->size())));
 		}
 
 		//Backpropagate
+#if DEBUG == 1
+		cout << "Backpropagate" << endl;
+#endif
 		while (node != NULL)
 		{
 			node->update(state->getResult(node->playerJustMoved()));

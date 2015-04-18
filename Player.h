@@ -41,8 +41,7 @@ public:
     void check();
     void fold();
     Hand bestHand(Card** flop, Card *turn, Card *river);
-    Move doMove(int index, Player *last);
-    Move doMove(Move move);
+    Move doMove(Move move, int index, Player *last);
 
 private:
     Card *hand[2];

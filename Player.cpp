@@ -132,11 +132,11 @@ void Player::fold()
     setState(FOLD, state.bet);
 }
 
-Move Player::doMove(int index, Player *last)
+Move Player::doMove(Move move, int index, Player *last)
 {
-    int prob = (rand() % 2)+1;
+    //int prob = (rand() % 2)+1;
     cout << "Player " << index << ": ";
-    switch (prob) 
+    switch (move) 
     {
         case 0:
             fold();
@@ -169,12 +169,6 @@ Move Player::doMove(int index, Player *last)
             }
             return CHECK;      
     }
-}
-
-//TODO
-Move Player::doMove(Move move)
-{
-    return move;
 }
 
 void checkHand(Card **combo, Card **retCombo, Hand *maxValue)

@@ -369,11 +369,13 @@ bool Game::playRound(Player *me, bool firstRound)
         if (turn == me && !me->isAI())
         {
             Move move = getMove();
-            me->doMove(move);
+            me->doMove(move, getPlayerIndex(me), getPreviousPlayer(turn));
         }
         else
         {
-            move = turn->doMove(getPlayerIndex(turn), getPreviousPlayer(turn));
+            NodeState state(this, turn);
+            Move move = UCTSearch(&state, UCT_DEPTH);
+            move = turn->doMove(move, getPlayerIndex(turn), getPreviousPlayer(turn));
         }
 
         // Change last player to make a move
