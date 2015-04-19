@@ -44,12 +44,17 @@ public:
     Hand bestHand(Card** flop, Card *turn, Card *river);
     Move doMove(Move move, int index, Player *last, bool sim);
 
+    //logging
+    void incHandsWon();
+    int getHandsWon();
+
 private:
     Card *hand[2];
     int chips;
     bool dealer;
     State state;
     bool ai;
+    int handsWon;
 };
 
 #endif //PLAYER_H

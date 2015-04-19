@@ -12,6 +12,7 @@ Player::Player()
     state.move = CHECK;
     state.bet = 0;
     ai = true;
+    handsWon = 0;
 }
 
 Player::Player(int chips, bool ai)
@@ -23,6 +24,7 @@ Player::Player(int chips, bool ai)
     state.move = CHECK;
     state.bet = 0;
     this->ai = ai;
+    handsWon = 0;
 }
 
 Player::Player(Player *player)
@@ -34,6 +36,7 @@ Player::Player(Player *player)
     state.move = player->state.move;
     state.bet = player->state.bet;
     ai = player->ai;
+    handsWon = player->handsWon;
 }
 
 Player::~Player()
@@ -254,4 +257,14 @@ Hand Player::bestHand(Card** flop, Card *turn, Card *river)
     printCardArray(retCombo, 5);
 
     return maxValue;
+}
+
+void Player::incHandsWon()
+{
+    handsWon += 1;
+}
+
+int Player::getHandsWon()
+{
+    return handsWon;
 }

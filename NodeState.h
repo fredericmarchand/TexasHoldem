@@ -20,14 +20,6 @@ private:
 	Game *game;
 	Player *player;
 	vector<Move> moves;
-	//Known information
-    /*Card *hand[2];
-    Card *flop[3];
-    Card *turn;
-    Card *river;
-    int chips;
-    int opponentChips;
-    int pot;*/
 };
 
 #endif //STATE_H

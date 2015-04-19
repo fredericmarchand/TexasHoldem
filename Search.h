@@ -17,6 +17,8 @@ static Move UCTSearch(NodeState *startState, int maxIter)
 	{
 		Node *node = root;
 		NodeState *state = root->getState();
+		state->getData()->shuffleDeck();
+		state->getData()->movePlayersCardsToBack();
 
 		//Select
 #if DEBUG == 1
@@ -34,7 +36,7 @@ static Move UCTSearch(NodeState *startState, int maxIter)
 #endif
 		if (!node->getUntriedMoves()->empty()) //if we can expand (i.e., state/node is non-terminal)
 		{
-			srand ( time(NULL) );
+			srand(time(NULL));
         	Move move = node->getUntriedMoves()->at(rand() % (node->getUntriedMoves()->size()));
         	state->doMove(move);
         	node = node->addChild(move, state); //Add child and descend tree
@@ -46,8 +48,7 @@ static Move UCTSearch(NodeState *startState, int maxIter)
 #endif
 		while (!state->getMoves()->empty()) //While state is non-terminal
 		{
-			srand ( time(NULL) );
-			//cout << state->getMoves()->size() << endl;
+			srand(time(NULL));
 			state->doMove(state->getMoves()->at(rand() % (state->getMoves()->size())));
 		}
 

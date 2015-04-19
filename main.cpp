@@ -103,7 +103,20 @@ int main(int argc, char** argv)
 end:
         //Check Results and give pot to winner
         cout << endl;
-        game->determineWinner();
+        if (game->determineWinner() == game->getPlayers()[0])
+        {
+            game->getPlayers()[0]->incHandsWon();
+        }
+        else
+        {
+            game->getPlayers()[1]->incHandsWon();
+        }
+
+        for (int i = 0; i < game->getPlayerCount(); ++i)
+        {
+            cout << "Player " << i << " has won " << game->getPlayers()[i]->getHandsWon() << " games." << endl;
+        }
+        
         cin.ignore();
     }
 
