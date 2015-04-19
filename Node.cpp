@@ -18,7 +18,7 @@ Node::Node(NodeState *state)
 
 Node::Node(Move move, Node *parent, NodeState *state)
 {
-    parent = parent;
+    this->parent = parent;
     visits = 0;
     this->move = move;
     this->state = state;

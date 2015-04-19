@@ -12,6 +12,7 @@ using namespace std;
 #include "Player.h"
 
 #define DEBUG 0
+#define VERBOSE true
 
 void printLabel(string label)
 {
@@ -56,7 +57,7 @@ int main(int argc, char** argv)
         cout << "Small Blind: $" << SMALL_BLIND << endl;
         cout << "Big Blind:   $" << BIG_BLIND << endl;
         cout << "Dealer: Player " << game->getPlayerIndex(game->getDealer()) << endl;
-        game->shuffleDeck();
+        game->shuffleDeck(false);
 
         //Blinds
         game->getSmallBlindPlayer()->bet(SMALL_BLIND);
@@ -73,7 +74,7 @@ int main(int argc, char** argv)
         
         //Flop
         printLabel("Flop");
-        game->flipFlop();
+        game->flipFlop(VERBOSE);
 
         //Round of betting
         if (game->playRound(me, false))
@@ -83,7 +84,7 @@ int main(int argc, char** argv)
 
         //Turn
         printLabel("Turn");
-        game->flipTurn();
+        game->flipTurn(VERBOSE);
 
         //Round of betting
         if (game->playRound(me, false))
@@ -93,7 +94,7 @@ int main(int argc, char** argv)
 
         //River
         printLabel("River");
-        game->flipRiver();
+        game->flipRiver(VERBOSE);
 
         //Final round of betting
         game->playRound(me, false);
@@ -103,21 +104,23 @@ int main(int argc, char** argv)
 end:
         //Check Results and give pot to winner
         cout << endl;
-        if (game->determineWinner() == game->getPlayers()[0])
+        int winnerIndex = game->determineWinner();
+        if (winnerIndex == 0)
         {
             game->getPlayers()[0]->incHandsWon();
         }
-        else
+        else if (winnerIndex == 1)
         {
             game->getPlayers()[1]->incHandsWon();
         }
 
         for (int i = 0; i < game->getPlayerCount(); ++i)
         {
-            cout << "Player " << i << " has won " << game->getPlayers()[i]->getHandsWon() << " games." << endl;
+            cout << "Player " << i << " has won " << game->getPlayers()[i]->getHandsWon() << " games" << endl;
         }
         
         cin.ignore();
+        //break;
     }
 
     //Print winner

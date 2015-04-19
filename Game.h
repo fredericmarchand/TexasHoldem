@@ -5,6 +5,7 @@
 #include "Card.h"
 
 #define TOTAL_CARDS 52
+#define SPLIT -1
 
 class Game
 {
@@ -23,23 +24,27 @@ public:
     Player* getNextPlayer(Player *player);
     Player* getPreviousPlayer(Player *player);
     int getPlayerIndex(Player *player);
-    void movePlayersCardsToBack();
-    void flipFlop();
-    void flipTurn();
-    void flipRiver();
+    void movePlayersCardsToFront();
+    void flipFlop(bool verbose);
+    void flipTurn(bool verbose);
+    void flipRiver(bool verbose);
     void distributeCards();
-    void shuffleDeck(); 
+    void shuffleDeck(bool pointer); 
     Card* flipNextCard();
     void discardNextCard();
-    Player* determineWinner();
+    int determineWinner();
     void printPot();
     bool playRound(Player *me, bool firstRound);
     void clearPlayerStates();
     void setPlayerStates();
     void addBetsToPot();
     bool checkLastPlayerRemaining(Player *player);
+    void splitPot();
     void givePotToWinner(Player *winner);
     Move getMove();
+    Card** getFlop();
+    Card* getTurn();
+    Card* getRiver();
 
 private:
     Player **players;

@@ -1,6 +1,7 @@
 #include "Game.h"
 #include <cstdlib>
 #include <iostream>
+#include <unistd.h>
 #include "Search.h"
 #include "CardUtil.h"
 
@@ -41,13 +42,17 @@ Game::Game(Game *game)
         players[i] = new Player(game->getPlayers()[i]);
     }
     
-    deckPointer = game->deckPointer;
+    deckPointer = 4;
 
     for (int i = 0; i < TOTAL_CARDS; ++i)
     {
         Card *card = new Card(game->deck[i]);
         deck[i] = card;
     }
+
+    flipFlop(false);
+    flipTurn(false);
+    flipRiver(false);
 }
 
 Game::~Game()
@@ -211,9 +216,9 @@ int Game::getPlayerIndex(Player *player)
     }
 }
 
-void Game::movePlayersCardsToBack()
+void Game::movePlayersCardsToFront()
 {
-    int index = TOTAL_CARDS-1;
+    int index = 0;
     for (int i = 0; i < TOTAL_CARDS; ++i)
     {
         for (int j = 0; j < numPlayers; ++j)
@@ -221,33 +226,36 @@ void Game::movePlayersCardsToBack()
             if (deck[i] == players[j]->getHand()[0] || 
                 deck[i] == players[j]->getHand()[1])
             {
-                swap(&deck[i], &deck[index--]);
+                swap(&deck[i], &deck[index++]);
             }
         }
     }
 }
 
-void Game::flipFlop()
+void Game::flipFlop(bool verbose)
 {
     discardNextCard();
     flop[0] = flipNextCard();
     flop[1] = flipNextCard();
     flop[2] = flipNextCard();
-    printCardArray(flop, 3);
+    if (verbose)
+        printCardArray(flop, 3);
 }
 
-void Game::flipTurn()
+void Game::flipTurn(bool verbose)
 {
     discardNextCard();
     turn = flipNextCard();
-    turn->printCard();
+    if (verbose)
+        turn->printCard();
 }
 
-void Game::flipRiver()
+void Game::flipRiver(bool verbose)
 {
     discardNextCard();
     river = flipNextCard();
-    river->printCard();
+    if (verbose)
+        river->printCard();
 }
 
 void Game::distributeCards() 
@@ -268,15 +276,21 @@ void swap(Card **a, Card **b)
     *b = temp;
 }
 
-void Game::shuffleDeck()
+void Game::shuffleDeck(bool pointer)
 {
+    int start = 0;
+    if (pointer)
+    {
+        start = deckPointer;
+    }
+
     // Use a different seed value so that we don't get same
     // result each time we run this program
-    srand ( time(NULL) );
+    srand (time(NULL));
  
     // Start from the last element and swap one by one. We don't
     // need to run for the first element that's why i > 0
-    for (int i = TOTAL_CARDS-1; i >= 0; i--)
+    for (int i = TOTAL_CARDS-1; i >= start; i--)
     {
         // Pick a random index from 0 to i
         int j = rand() % (i+1);
@@ -299,7 +313,8 @@ void Game::discardNextCard()
 }
 
 //Needs to be more in depth
-Player* Game::determineWinner()
+//Heads up only
+int Game::determineWinner()
 {
     //Check if everyone folded but one person
     for (int i = 0; i < numPlayers; ++i)
@@ -307,28 +322,51 @@ Player* Game::determineWinner()
         if (checkLastPlayerRemaining(players[i]) == true)
         {
             givePotToWinner(players[i]);
-            return players[i];
+            return i;
         }
     }
-
+    
+    int equalHands = 0;
     Hand hands[numPlayers];
     Hand best = NOTHING;
-    int playerIndex;
-    for (int i = 0; i < numPlayers; ++i) {
-        hands[i] = players[i]->bestHand(flop, turn, river);
-
+    int playerIndex = 0;
+    for (int i = 0; i < numPlayers; ++i) 
+    {
+        hands[i] = players[i]->bestHand(flop, turn, river, true);
         if (hands[i] > best)
         {
             best = hands[i];
             playerIndex = i;
+            equalHands = 0;
         }
-        cout << "Hand: " << hands[i] << endl;
-        cout << endl;
+        else if (hands[i] == best)
+        {
+            equalHands = 1;
+        }        
     }
 
-    givePotToWinner(players[playerIndex]);
+    if (equalHands == 1)
+    {
+        splitPot();
+        return SPLIT;
+    }
+    else
+    {
+        givePotToWinner(players[playerIndex]);
+    }
 
-    return players[playerIndex];
+    return playerIndex;
+}
+
+void Game::splitPot()
+{
+    cout << "Split pot" << endl;
+    for (int i = 0; i < numPlayers; ++i)
+    {
+        players[i]->addChips((int)(pot/numPlayers));
+        cout << "Player " << i << ": $" << players[i]->getChipCount() << endl;
+    }
+    pot = 0;
 }
 
 void Game::givePotToWinner(Player *winner)
@@ -391,9 +429,10 @@ bool Game::playRound(Player *me, bool firstRound)
         }
         else
         {
-            NodeState state(this, turn);
-            Move move = UCTSearch(&state, UCT_DEPTH);
+            NodeState *state = new NodeState(this, turn);
+            Move move = UCTSearch(state, UCT_DEPTH);
             move = turn->doMove(move, getPlayerIndex(turn), getPreviousPlayer(turn), false);
+            delete state;
         }
 
         // Change last player to make a move
@@ -449,7 +488,6 @@ void Game::addBetsToPot()
     for (int i = 0; i < numPlayers; ++i)
     {
         pot += players[i]->getState().bet;
-        //players[i]->setState(players[i]->getState().move, 0);
     }
 }
 
@@ -493,4 +531,19 @@ Move Game::getMove()
     }
 
     return move;
+}
+
+Card** Game::getFlop()
+{
+    return flop;
+}
+
+Card* Game::getTurn()
+{
+    return turn;
+}
+
+Card* Game::getRiver()
+{
+    return river;
 }

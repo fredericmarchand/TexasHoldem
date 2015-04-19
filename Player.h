@@ -41,7 +41,7 @@ public:
     bool bet(int value);
     void check();
     void fold();
-    Hand bestHand(Card** flop, Card *turn, Card *river);
+    Hand bestHand(Card** flop, Card *turn, Card *river, bool verbose);
     Move doMove(Move move, int index, Player *last, bool sim);
 
     //logging

@@ -187,7 +187,7 @@ Move Player::doMove(Move move, int index, Player *last, bool sim)
 
 void checkHand(Card **combo, Card **retCombo, Hand *maxValue)
 {
-    sortCardArray(combo, 0, 5);
+    sortCardArray(combo, 0, 4);
     Hand value = NOTHING;
     value = evaluateHand(combo);
     if (value > *maxValue) 
@@ -200,7 +200,7 @@ void checkHand(Card **combo, Card **retCombo, Hand *maxValue)
     }
 }
 
-Hand Player::bestHand(Card** flop, Card *turn, Card *river)
+Hand Player::bestHand(Card** flop, Card *turn, Card *river, bool verbose)
 {
     Card *combo[5];
     Hand maxValue = NOTHING;
@@ -254,7 +254,10 @@ Hand Player::bestHand(Card** flop, Card *turn, Card *river)
         cout << "retCombo is NULL" << endl;
     }
 
-    printCardArray(retCombo, 5);
+    if (verbose)
+    {
+        printCardArray(retCombo, 5);
+    }
 
     return maxValue;
 }

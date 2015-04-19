@@ -19,16 +19,9 @@ typedef enum hands {
     ROYAL_FLUSH,
 } Hand;
 
-static int compareCards(const void *card1, const void *card2)
-{
-    return (*(Card *)card1).getCardValue() - (*(Card *)card2).getCardValue();
-}
-
-
 /* Cards must be sorted by value */
 static Hand evaluateHand(Card *hand[])
 {
-    qsort(hand, 5, sizeof(Card), compareCards);
     int straight,flush,three,four,full,pairs;
     int k;
 
@@ -166,19 +159,19 @@ static void sortCardArray(Card *cards[], int left, int right)
     {
         while (cards[i]->getCardValue() < pivot->getCardValue())
         {
-              i++;
+            i++;
         }
         while (cards[j]->getCardValue() > pivot->getCardValue())
         {
-              j--;
+            j--;
         }
         if (i <= j) 
         {
-              tmp = cards[i];
-              cards[i] = cards[j];
-              cards[j] = tmp;
-              i++;
-              j--;
+            tmp = cards[i];
+            cards[i] = cards[j];
+            cards[j] = tmp;
+            i++;
+            j--;
         }
     }
 

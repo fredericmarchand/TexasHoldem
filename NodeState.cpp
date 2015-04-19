@@ -4,12 +4,10 @@ using namespace std;
 NodeState::NodeState(Game *game, Player *player)
 {
 	this->game = new Game(game);
-	this->player = new Player(player);
+	this->player = this->game->getPlayers()[game->getPlayerIndex(player)];
 
-	this->game->shuffleDeck();
-	this->game->movePlayersCardsToBack();
-
-	moves.clear();
+	this->game->shuffleDeck(true);
+	this->game->movePlayersCardsToFront();
 
 	moves.push_back(FOLD);
 
@@ -34,12 +32,10 @@ NodeState::NodeState(Game *game, Player *player)
 NodeState::NodeState(NodeState *state)
 {
 	game = new Game(state->getData());
-	player = new Player(state->getPlayer());
+	player = this->game->getPlayers()[game->getPlayerIndex(state->getPlayer())];
 
-	game->shuffleDeck();
-	game->movePlayersCardsToBack();
-
-	moves.clear();
+	game->shuffleDeck(true);
+	game->movePlayersCardsToFront();
 
 	moves.push_back(FOLD);
 
@@ -95,5 +91,23 @@ void NodeState::doMove(Move move)
 
 int NodeState::getResult(bool playerJustMoved)
 {
+	int p1 = game->getPlayers()[0]->bestHand(game->getFlop(), game->getTurn(), game->getRiver(), false);
+	int p2 = game->getPlayers()[1]->bestHand(game->getFlop(), game->getTurn(), game->getRiver(), false);
+	if (game->getPlayerIndex(player) == 0)
+	{
+		if (p1 > p2)
+			return 1;
+		else if (p1 == p2)
+			return 0;
+		else return -1;
+	}
+	else
+	{
+		if (p1 < p2)
+			return 1;
+		else if (p1 == p2)
+			return 0;
+		else return -1;
+	}
 	return 0;
 }
