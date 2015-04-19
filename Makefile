@@ -2,7 +2,7 @@ all:	Card.o Player.o Game.o main.o Node.o Search.h NodeState.o
 		g++ Card.o Player.o Game.o Node.o NodeState.o main.o -o app 
 
 main.o:		
-			g++ -c main.cpp -o main.o #-lcilkrts -ldl -std=c++11 -fcilkplus
+			g++ -c main.cpp -o main.o
 
 Card.o:		Card.h
 			g++ -c Card.cpp -o Card.o

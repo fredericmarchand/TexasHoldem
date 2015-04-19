@@ -6,6 +6,9 @@ NodeState::NodeState(Game *game, Player *player)
 	this->game = new Game(game);
 	this->player = new Player(player);
 
+	this->game->shuffleDeck();
+	this->game->movePlayersCardsToBack();
+
 	moves.clear();
 
 	moves.push_back(FOLD);
@@ -32,6 +35,9 @@ NodeState::NodeState(NodeState *state)
 {
 	game = new Game(state->getData());
 	player = new Player(state->getPlayer());
+
+	game->shuffleDeck();
+	game->movePlayersCardsToBack();
 
 	moves.clear();
 
@@ -77,8 +83,7 @@ vector<Move>* NodeState::getMoves()
 
 void NodeState::doMove(Move move)
 {
-	player->doMove(move, game->getPlayerIndex(player), game->getPreviousPlayer(player));
-	//cout << moves.size() << endl;
+	player->doMove(move, game->getPlayerIndex(player), game->getPreviousPlayer(player), true);
 	for (int i = 0; i < moves.size(); ++i)
 	{
 		if (moves.at(i) == move)
@@ -86,7 +91,6 @@ void NodeState::doMove(Move move)
 			moves.erase(moves.begin()+i);
 		}
 	}
-	//cout << moves.size() << endl;
 }
 
 int NodeState::getResult(bool playerJustMoved)

@@ -28,6 +28,7 @@ public:
     ~Player();
     void addCardToHand(Card *newCard, int i);
     int getChipCount();
+    Card** getHand();
     int addChips(int pot);
     int removeChips(int amount);
     bool isDealer();
@@ -41,7 +42,7 @@ public:
     void check();
     void fold();
     Hand bestHand(Card** flop, Card *turn, Card *river);
-    Move doMove(Move move, int index, Player *last);
+    Move doMove(Move move, int index, Player *last, bool sim);
 
 private:
     Card *hand[2];

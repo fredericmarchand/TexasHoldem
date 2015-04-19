@@ -52,6 +52,11 @@ int Player::getChipCount()
     return chips;
 }
 
+Card** Player::getHand()
+{
+    return hand;
+}
+
 int Player::addChips(int pot)
 {
     chips += pot;
@@ -132,26 +137,30 @@ void Player::fold()
     setState(FOLD, state.bet);
 }
 
-Move Player::doMove(Move move, int index, Player *last)
+Move Player::doMove(Move move, int index, Player *last, bool sim)
 {
     //int prob = (rand() % 2)+1;
-    cout << "Player " << index << ": ";
+    if (!sim)
+        cout << "Player " << index << ": ";
     switch (move) 
     {
         case 0:
             fold();
-            cout << "fold" << endl;
+            if (!sim)
+                cout << "fold" << endl;
             return FOLD;
         case 1:
             if (last->getState().bet >= state.bet)
             {
                 bet(DEFAULT_BET + (last->getState().bet - getState().bet));
-                cout << "raise " << DEFAULT_BET << " to " << getState().bet << endl;
+                if (!sim)
+                    cout << "raise " << DEFAULT_BET << " to " << getState().bet << endl;
             }
             else
             {
                 bet(DEFAULT_BET);
-                cout << "bet " << DEFAULT_BET << endl;
+                if (!sim)
+                    cout << "bet " << DEFAULT_BET << endl;
             }
             return BET;
         case 2:
@@ -160,12 +169,14 @@ Move Player::doMove(Move move, int index, Player *last)
             {
                 bet(last->getState().bet - getState().bet);
                 check();
-                cout << "call" << endl;
+                if (!sim)
+                    cout << "call" << endl;
             }
             else
             {
                 check();
-                cout << "check" << endl;
+                if (!sim)
+                    cout << "check" << endl;
             }
             return CHECK;      
     }
@@ -173,6 +184,7 @@ Move Player::doMove(Move move, int index, Player *last)
 
 void checkHand(Card **combo, Card **retCombo, Hand *maxValue)
 {
+    sortCardArray(combo, 0, 5);
     Hand value = NOTHING;
     value = evaluateHand(combo);
     if (value > *maxValue) 

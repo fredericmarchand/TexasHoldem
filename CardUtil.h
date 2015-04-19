@@ -24,6 +24,8 @@ static int compareCards(const void *card1, const void *card2)
     return (*(Card *)card1).getCardValue() - (*(Card *)card2).getCardValue();
 }
 
+
+/* Cards must be sorted by value */
 static Hand evaluateHand(Card *hand[])
 {
     qsort(hand, 5, sizeof(Card), compareCards);
@@ -151,6 +153,42 @@ static Hand evaluateHand(Card *hand[])
     else
     {
         return HIGH_CARD;
+    }
+}
+
+static void sortCardArray(Card *cards[], int left, int right)
+{
+    int i = left, j = right;
+    Card *tmp;
+    Card *pivot = cards[(left + right) / 2];
+
+    while (i <= j) 
+    {
+        while (cards[i]->getCardValue() < pivot->getCardValue())
+        {
+              i++;
+        }
+        while (cards[j]->getCardValue() > pivot->getCardValue())
+        {
+              j--;
+        }
+        if (i <= j) 
+        {
+              tmp = cards[i];
+              cards[i] = cards[j];
+              cards[j] = tmp;
+              i++;
+              j--;
+        }
+    }
+
+    if (left < j)
+    {
+        sortCardArray(cards, left, j);
+    }
+    if (i < right)
+    {
+        sortCardArray(cards, i, right);
     }
 }
 

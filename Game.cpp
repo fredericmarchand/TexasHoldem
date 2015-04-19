@@ -6,13 +6,15 @@
 
 using namespace std;
 
+void swap(Card **a, Card **b);
+
 Game::Game(int numPlayers)
 {
     this->numPlayers = numPlayers;
     players = new Player*[numPlayers];
     for (int i = 0; i < numPlayers; ++i)
     {
-        players[i] = new Player(1000, true);
+        players[i] = new Player(10000, true);
     }
 
     deckPointer = 0;
@@ -209,6 +211,22 @@ int Game::getPlayerIndex(Player *player)
     }
 }
 
+void Game::movePlayersCardsToBack()
+{
+    int index = TOTAL_CARDS-1;
+    for (int i = 0; i < TOTAL_CARDS; ++i)
+    {
+        for (int j = 0; j < numPlayers; ++j)
+        {
+            if (deck[i] == players[j]->getHand()[0] || 
+                deck[i] == players[j]->getHand()[1])
+            {
+                swap(&deck[i], &deck[index--]);
+            }
+        }
+    }
+}
+
 void Game::flipFlop()
 {
     discardNextCard();
@@ -369,13 +387,13 @@ bool Game::playRound(Player *me, bool firstRound)
         if (turn == me && !me->isAI())
         {
             Move move = getMove();
-            me->doMove(move, getPlayerIndex(me), getPreviousPlayer(turn));
+            me->doMove(move, getPlayerIndex(me), getPreviousPlayer(turn), false);
         }
         else
         {
             NodeState state(this, turn);
             Move move = UCTSearch(&state, UCT_DEPTH);
-            move = turn->doMove(move, getPlayerIndex(turn), getPreviousPlayer(turn));
+            move = turn->doMove(move, getPlayerIndex(turn), getPreviousPlayer(turn), false);
         }
 
         // Change last player to make a move

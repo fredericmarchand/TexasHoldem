@@ -23,6 +23,7 @@ public:
     Player* getNextPlayer(Player *player);
     Player* getPreviousPlayer(Player *player);
     int getPlayerIndex(Player *player);
+    void movePlayersCardsToBack();
     void flipFlop();
     void flipTurn();
     void flipRiver();
