@@ -120,6 +120,8 @@ Player* Game::getDealer()
            return players[i];
         }
     }
+    //never happens
+    return NULL;
 }
 
 Player* Game::getBigBlindPlayer()
@@ -214,6 +216,8 @@ int Game::getPlayerIndex(Player *player)
             return i;
         }
     }
+    //never happens
+    return -1;
 }
 
 void Game::movePlayersCardsToFront()

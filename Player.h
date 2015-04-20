@@ -29,8 +29,8 @@ public:
     void addCardToHand(Card *newCard, int i);
     int getChipCount();
     Card** getHand();
-    int addChips(int pot);
-    int removeChips(int amount);
+    void addChips(int pot);
+    void removeChips(int amount);
     bool isDealer();
     bool isAI();
     void setAI(bool ai);

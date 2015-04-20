@@ -60,12 +60,12 @@ Card** Player::getHand()
     return hand;
 }
 
-int Player::addChips(int pot)
+void Player::addChips(int pot)
 {
     chips += pot;
 }
 
-int Player::removeChips(int amount)
+void Player::removeChips(int amount)
 {
     chips -= amount;
 }
@@ -248,11 +248,6 @@ Hand Player::bestHand(Card** flop, Card *turn, Card *river, bool verbose)
     checkHand(combo, retCombo, &maxValue);
     combo[0] = hand[1]; combo[1] = turn;  combo[2] = river;   combo[3] = flop[1]; combo[4] = flop[2];
     checkHand(combo, retCombo, &maxValue);
-
-    if (retCombo == NULL)
-    {
-        cout << "retCombo is NULL" << endl;
-    }
 
     if (verbose)
     {
