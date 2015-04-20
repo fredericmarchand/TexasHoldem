@@ -5,6 +5,17 @@ NodeState::NodeState(Game *game1, Player *player1)
 {
 	game = new Game(game1);
 	player = game->getPlayers()[game1->getPlayerIndex(player1)];
+
+	flopNull = false;
+	turnNull = false;
+	riverNull = false;
+	if (game->getFlop()[0] == NULL)
+		flopNull = true;
+	if (game->getTurn() == NULL)
+		turnNull = true;
+	if (game->getRiver() == NULL)
+		riverNull = true;
+
 	game->setupAIGame(this->player);
 
 	moves.push_back(FOLD);
@@ -31,6 +42,17 @@ NodeState::NodeState(NodeState *state)
 {
 	game = new Game(state->getData());
 	player = game->getPlayers()[state->getData()->getPlayerIndex(state->getPlayer())];
+
+	flopNull = false;
+	turnNull = false;
+	riverNull = false;
+	if (game->getFlop()[0] == NULL)
+		flopNull = true;
+	if (game->getTurn() == NULL)
+		turnNull = true;
+	if (game->getRiver() == NULL)
+		riverNull = true;
+	
 	game->setupAIGame(player);
 
 	moves.push_back(FOLD);
@@ -108,4 +130,9 @@ int NodeState::getResult(bool playerJustMoved)
 		else return 0;
 	}
 	return 0;
+}
+
+void NodeState::randomize()
+{
+	game->aiSwap(game->getNextPlayer(player), flopNull, turnNull, riverNull);
 }

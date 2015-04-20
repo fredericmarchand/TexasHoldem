@@ -25,10 +25,10 @@ Game::Game(int numPlayers)
         int value = TWO;
         for (; value <= ACE; ++value)
         {
-            Card *card = new Card((Suit)suit, (CardValue)value);
-            deck[index++] = card;
+            deck[index++] = new Card((Suit)suit, (CardValue)value);
         }
     }
+    resetDeck();
 }
 
 Game::Game(Game *game)
@@ -46,6 +46,12 @@ Game::Game(Game *game)
     {
         deck[i] = new Card(game->deck[i]);
     }
+
+    flop[0] = getCard(game->flop[0]);
+    flop[1] = getCard(game->flop[1]);
+    flop[2] = getCard(game->flop[2]);
+    turn = getCard(game->turn);
+    river = getCard(game->river);
 }
 
 Game::~Game()
@@ -65,6 +71,11 @@ Game::~Game()
 void Game::resetDeck()
 {
     deckPointer = 0;
+    flop[0] = NULL;
+    flop[1] = NULL;
+    flop[2] = NULL;
+    turn = NULL;
+    river = NULL;
 }
 
 Player** Game::getPlayers()
@@ -255,14 +266,8 @@ void Game::swap(Card **a, Card **b)
     *b = temp;
 }
 
-void Game::shuffleDeck(bool pointer)
+void Game::shuffleDeck(int start)
 {
-    int start = 0;
-    if (pointer)
-    {
-        start = deckPointer;
-    }
-
     // Use a different seed value so that we don't get same
     // result each time we run this program
     srand (time(NULL));
@@ -540,8 +545,15 @@ Card* Game::getRiver()
 
 Card* Game::getCard(Card *card)
 {
+    if (card == NULL)
+    {
+        return NULL;
+    }
+
     for (int i = 0; i < TOTAL_CARDS; ++i)
     {
+        if (deck[i] == NULL)
+            cout << "FUCK" << endl;
         if (card->getSuit() == deck[i]->getSuit() && card->getCardValue() == deck[i]->getCardValue())
         {
             return deck[i];
@@ -553,7 +565,7 @@ Card* Game::getCard(Card *card)
 
 void Game::setupAIGame(Player *player)
 {
-    shuffleDeck(false);
+    shuffleDeck(0);
     Card *c1 = getCard(player->getHand()[0]);
     Card *c2 = getCard(player->getHand()[1]);
     if (player == players[0])
@@ -567,7 +579,60 @@ void Game::setupAIGame(Player *player)
         swap(&c2, &deck[3]);
     }
     distributeCards();
-    flipFlop(false);
-    flipTurn(false);
-    flipRiver(false);
+
+    if (flop[0] == NULL || flop[1] == NULL || flop[2] == NULL)
+    {
+        flipFlop(false);
+    }
+    else
+    {
+        swap(&flop[0], &deck[5]);
+        swap(&flop[1], &deck[6]);
+        swap(&flop[2], &deck[7]);
+        deckPointer+=4;
+    }
+    if (turn == NULL)
+    {
+        flipTurn(false);
+    }
+    else
+    {
+        swap(&turn, &deck[9]);
+        deckPointer+=2;
+    }
+    if (river == NULL)
+    {
+        flipRiver(false);
+    }
+    else
+    {
+        swap(&river, &deck[11]);
+        deckPointer+=2;
+    }
+}
+
+void Game::aiSwap(Player *player, bool fl, bool tu, bool ri)
+{
+    shuffleDeck(3);
+    player->getHand()[0] = deck[4];
+    player->getHand()[1] = deck[5];
+    if (fl)
+    {
+        flop[0] = deck[6];
+        flop[1] = deck[7];
+        flop[2] = deck[8];
+        swap(&flop[0], &deck[5]);
+        swap(&flop[1], &deck[6]);
+        swap(&flop[2], &deck[7]);
+    }
+    if (tu)
+    {
+        turn = deck[9];
+        swap(&turn, &deck[9]);
+    }
+    if (ri)
+    {
+        river = deck[10];
+        swap(&river, &deck[11]);
+    }
 }

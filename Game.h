@@ -28,7 +28,7 @@ public:
     void flipTurn(bool verbose);
     void flipRiver(bool verbose);
     void distributeCards();
-    void shuffleDeck(bool pointer); 
+    void shuffleDeck(int start); 
     Card* flipNextCard();
     void discardNextCard();
     int determineWinner();
@@ -47,6 +47,7 @@ public:
     void swap(Card **a, Card **b);
     Card* getCard(Card *card);
     void setupAIGame(Player *player);
+    void aiSwap(Player *player, bool fl, bool tu, bool ri);
 
 private:
     Player **players;

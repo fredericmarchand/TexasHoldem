@@ -57,7 +57,7 @@ int main(int argc, char** argv)
         cout << "Small Blind: $" << SMALL_BLIND << endl;
         cout << "Big Blind:   $" << BIG_BLIND << endl;
         cout << "Dealer: Player " << game->getPlayerIndex(game->getDealer()) << endl;
-        game->shuffleDeck(false);
+        game->shuffleDeck(0);
 
         //Blinds
         game->getSmallBlindPlayer()->bet(SMALL_BLIND);

@@ -15,11 +15,15 @@ public:
 	vector<Move>* getMoves();
 	void doMove(Move move);
 	int getResult(bool pjm);
+	void randomize();
 
 private:
 	Game *game;
 	Player *player;
 	vector<Move> moves;
+	bool flopNull;
+	bool turnNull;
+	bool riverNull;
 };
 
 #endif //STATE_H
