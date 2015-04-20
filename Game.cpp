@@ -7,8 +7,6 @@
 
 using namespace std;
 
-void swap(Card **a, Card **b);
-
 Game::Game(int numPlayers)
 {
     this->numPlayers = numPlayers;
@@ -42,17 +40,12 @@ Game::Game(Game *game)
         players[i] = new Player(game->getPlayers()[i]);
     }
     
-    deckPointer = 4;
+    deckPointer = 0;
 
     for (int i = 0; i < TOTAL_CARDS; ++i)
     {
-        Card *card = new Card(game->deck[i]);
-        deck[i] = card;
+        deck[i] = new Card(game->deck[i]);
     }
-
-    flipFlop(false);
-    flipTurn(false);
-    flipRiver(false);
 }
 
 Game::~Game()
@@ -194,7 +187,6 @@ Player* Game::getPreviousPlayer(Player *player)
             break;
         }
     }
-
     do {
         index++;
         if (index == numPlayers)
@@ -203,7 +195,6 @@ Player* Game::getPreviousPlayer(Player *player)
         }
     }
     while (players[index]->getState().move == FOLD);
-
     return players[index];
 }
 
@@ -218,22 +209,6 @@ int Game::getPlayerIndex(Player *player)
     }
     //never happens
     return -1;
-}
-
-void Game::movePlayersCardsToFront()
-{
-    int index = 0;
-    for (int i = 0; i < TOTAL_CARDS; ++i)
-    {
-        for (int j = 0; j < numPlayers; ++j)
-        {
-            if (deck[i] == players[j]->getHand()[0] || 
-                deck[i] == players[j]->getHand()[1])
-            {
-                swap(&deck[i], &deck[index++]);
-            }
-        }
-    }
 }
 
 void Game::flipFlop(bool verbose)
@@ -273,7 +248,7 @@ void Game::distributeCards()
     }
 }
 
-void swap(Card **a, Card **b)
+void Game::swap(Card **a, Card **b)
 {
     Card *temp = *a;
     *a = *b;
@@ -412,8 +387,10 @@ bool Game::playRound(Player *me, bool firstRound)
         last = getDealer();
     }
 
+    int raiseCount = 0;
     while (1)
     {
+
         if (checkLastPlayerRemaining(turn) == true)
         {
             break;
@@ -428,13 +405,22 @@ bool Game::playRound(Player *me, bool firstRound)
         Move move = CHECK;
         if (turn == me && !me->isAI())
         {
-            Move move = getMove();
+            move = getMove();
             me->doMove(move, getPlayerIndex(me), getPreviousPlayer(turn), false);
         }
         else
         {
             NodeState *state = new NodeState(this, turn);
-            Move move = UCTSearch(state, UCT_DEPTH);
+            move = UCTSearch(state, UCT_DEPTH);
+            if (move == BET)
+            {
+                raiseCount++;
+            }
+            if (raiseCount > 5)
+            {
+                raiseCount = 0;
+                move = CHECK;
+            }
             move = turn->doMove(move, getPlayerIndex(turn), getPreviousPlayer(turn), false);
             delete state;
         }
@@ -550,4 +536,38 @@ Card* Game::getTurn()
 Card* Game::getRiver()
 {
     return river;
+}
+
+Card* Game::getCard(Card *card)
+{
+    for (int i = 0; i < TOTAL_CARDS; ++i)
+    {
+        if (card->getSuit() == deck[i]->getSuit() && card->getCardValue() == deck[i]->getCardValue())
+        {
+            return deck[i];
+        }
+    }
+    //never happens
+    return NULL;
+}
+
+void Game::setupAIGame(Player *player)
+{
+    shuffleDeck(false);
+    Card *c1 = getCard(player->getHand()[0]);
+    Card *c2 = getCard(player->getHand()[1]);
+    if (player == players[0])
+    {
+        swap(&c1, &deck[0]);
+        swap(&c2, &deck[2]);
+    }
+    else if (player == players[1])
+    {
+        swap(&c1, &deck[1]);
+        swap(&c2, &deck[3]);
+    }
+    distributeCards();
+    flipFlop(false);
+    flipTurn(false);
+    flipRiver(false);
 }

@@ -147,12 +147,12 @@ Move Player::doMove(Move move, int index, Player *last, bool sim)
         cout << "Player " << index << ": ";
     switch (move) 
     {
-        case 0:
+        case FOLD:
             fold();
             if (!sim)
                 cout << "fold" << endl;
             return FOLD;
-        case 1:
+        case BET:
             if (last->getState().bet >= state.bet)
             {
                 bet(DEFAULT_BET + (last->getState().bet - getState().bet));
@@ -166,7 +166,7 @@ Move Player::doMove(Move move, int index, Player *last, bool sim)
                     cout << "bet " << DEFAULT_BET << endl;
             }
             return BET;
-        case 2:
+        case CHECK:
         default:
             if (last->getState().bet > getState().bet)
             {

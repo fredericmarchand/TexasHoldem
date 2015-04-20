@@ -1,13 +1,11 @@
 #include "NodeState.h"
 using namespace std;
 
-NodeState::NodeState(Game *game, Player *player)
+NodeState::NodeState(Game *game1, Player *player1)
 {
-	this->game = new Game(game);
-	this->player = this->game->getPlayers()[game->getPlayerIndex(player)];
-
-	this->game->shuffleDeck(true);
-	this->game->movePlayersCardsToFront();
+	game = new Game(game1);
+	player = game->getPlayers()[game1->getPlayerIndex(player1)];
+	game->setupAIGame(this->player);
 
 	moves.push_back(FOLD);
 
@@ -32,10 +30,8 @@ NodeState::NodeState(Game *game, Player *player)
 NodeState::NodeState(NodeState *state)
 {
 	game = new Game(state->getData());
-	player = this->game->getPlayers()[game->getPlayerIndex(state->getPlayer())];
-
-	game->shuffleDeck(true);
-	game->movePlayersCardsToFront();
+	player = game->getPlayers()[state->getData()->getPlayerIndex(state->getPlayer())];
+	game->setupAIGame(player);
 
 	moves.push_back(FOLD);
 
@@ -59,7 +55,7 @@ NodeState::NodeState(NodeState *state)
 
 NodeState::~NodeState()
 {
-	delete game;
+	//delete game;
 }
 
 Game* NodeState::getData()
@@ -91,23 +87,25 @@ void NodeState::doMove(Move move)
 
 int NodeState::getResult(bool playerJustMoved)
 {
+	if (this->game == NULL)
+		cout << "FUCKA" << endl;
 	int p1 = game->getPlayers()[0]->bestHand(game->getFlop(), game->getTurn(), game->getRiver(), false);
 	int p2 = game->getPlayers()[1]->bestHand(game->getFlop(), game->getTurn(), game->getRiver(), false);
 	if (game->getPlayerIndex(player) == 0)
 	{
 		if (p1 > p2)
-			return 1;
+			return 2;
 		else if (p1 == p2)
-			return 0;
-		else return -1;
+			return 1;
+		else return 0;
 	}
 	else
 	{
 		if (p1 < p2)
-			return 1;
+			return 2;
 		else if (p1 == p2)
-			return 0;
-		else return -1;
+			return 1;
+		else return 0;
 	}
 	return 0;
 }

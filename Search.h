@@ -17,8 +17,7 @@ static Move UCTSearch(NodeState *startState, int maxIter)
 	{
 		Node *node = root;
 		NodeState *state = root->getState();
-		state->getData()->shuffleDeck(true);
-		state->getData()->movePlayersCardsToFront();
+		state->getData()->setupAIGame(state->getPlayer());
 
 		//Select
 #if DEBUG == 1

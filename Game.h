@@ -24,7 +24,6 @@ public:
     Player* getNextPlayer(Player *player);
     Player* getPreviousPlayer(Player *player);
     int getPlayerIndex(Player *player);
-    void movePlayersCardsToFront();
     void flipFlop(bool verbose);
     void flipTurn(bool verbose);
     void flipRiver(bool verbose);
@@ -45,6 +44,9 @@ public:
     Card** getFlop();
     Card* getTurn();
     Card* getRiver();
+    void swap(Card **a, Card **b);
+    Card* getCard(Card *card);
+    void setupAIGame(Player *player);
 
 private:
     Player **players;
